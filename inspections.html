@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tenera — Rental Building Inspections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --tnr-gray:#33383C; --tnr-green:#145A3D; --tnr-accent:#4CC38A;
+    --navy:#152344; --navy-deep:#0F1B36; --orange:#F15A24;
+    --ink:#1B2B4B; --muted:#98A2B3; --line:#E7EBF0; --bg:#F3F7F4;
+    --green:#2FBF71; --green-bg:#EAF7EF; --gold:#E0A82E; --gold-bg:#FBF2DE;
+    --yellow:#E8A33D; --yellow-bg:#FBF2E2; --red:#B3261E; --red-bg:#FEF1EE;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+  body.cart-on{padding-bottom:92px}
+
+  .topbar{background:var(--tnr-gray);border-bottom:3px solid var(--tnr-green);padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;position:sticky;top:0;z-index:30}
+  .brand{display:flex;align-items:center;gap:13px}
+  .mark{width:38px;height:38px;border-radius:9px;background:var(--tnr-green);display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;letter-spacing:.04em}
+  .brand h1{margin:0;color:#fff;font-size:16px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+  .brand .deck{margin-left:5px;padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.09);color:#C9D1D4;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+  .navlinks{display:flex;gap:16px;flex-wrap:wrap}
+  .navlinks a{color:#C9D1D4;text-decoration:none;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .15s}
+  .navlinks a:hover{color:var(--tnr-accent)}
+
+  .sec{padding:56px 28px;max-width:1180px;margin:0 auto}
+  .eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--orange);margin:0 0 12px}
+  .act-num{color:var(--tnr-accent);font-weight:700;margin-right:8px}
+  h2.big{font-size:31px;font-weight:700;letter-spacing:-.01em;line-height:1.16;margin:0 0 14px;max-width:820px}
+  .lede{font-size:16.5px;line-height:1.6;color:#41506B;max-width:760px;margin:0}
+  .rule{height:3px;width:58px;background:var(--orange);border-radius:2px;margin:0 0 22px}
+  .is-hidden{display:none!important}
+
+  .hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff;padding:72px 28px 66px}
+  .hero-inner{max-width:1180px;margin:0 auto}
+  .hero .eyebrow{color:var(--tnr-accent)}
+  .hero h2{font-size:40px;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:0 0 18px;max-width:840px}
+  .hero p{font-size:18px;line-height:1.6;color:#C7D2E5;max-width:680px;margin:0 0 28px}
+  .hero .promise{background:rgba(76,195,138,.12);border-left:4px solid var(--tnr-accent);border-radius:10px;padding:18px 22px;max-width:720px;font-size:17px;line-height:1.55}
+  .hero .promise b{color:var(--tnr-accent)}
+  .herometa{display:flex;gap:36px;flex-wrap:wrap;margin-top:30px}
+  .herometa .k{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8FA0BF;margin-bottom:5px}
+  .herometa .v{font-size:21px;font-weight:700} .herometa .v.acc{color:var(--tnr-accent)}
+
+  .flip{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:stretch;margin-top:30px}
+  .flip .box{border-radius:var(--radius);padding:22px;border:1px solid var(--line);background:#fff}
+  .flip .box.bad{background:var(--red-bg);border-color:#F6D6CF} .flip .box.good{background:var(--green-bg);border-color:#CBEBD8}
+  .flip .box .t{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;margin:0 0 10px}
+  .flip .box.bad .t{color:var(--red)} .flip .box.good .t{color:var(--tnr-green)}
+  .flip .box p{margin:0;font-size:15px;line-height:1.55;color:#3A4A63}
+  .flip .arrow{display:grid;place-items:center;font-size:26px;color:var(--orange);font-weight:700}
+  @media(max-width:820px){.flip{grid-template-columns:1fr}.flip .arrow{transform:rotate(90deg)}}
+
+  .rsto{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .rsto-inner{max-width:1180px;margin:0 auto;padding:56px 28px}
+  .citytag{display:inline-flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--tnr-gray);background:#EEF2F6;border-radius:99px;padding:7px 14px;margin-bottom:16px}
+  .citytag i{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+  .signs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0 8px}
+  .sign{border-radius:var(--radius);padding:20px;color:#fff}
+  .sign.g{background:var(--green)} .sign.y{background:var(--yellow)} .sign.r{background:var(--red)}
+  .sign .band{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;opacity:.9}
+  .sign .rng{font-size:26px;font-weight:700;margin:5px 0;line-height:1} .sign .desc{font-size:13px;line-height:1.5;opacity:.96}
+  .sign .share{display:block;margin-top:10px;font-size:12px;font-weight:600;opacity:.92}
+  @media(max-width:720px){.signs{grid-template-columns:1fr}}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+  .split .col{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .split .col h3{margin:0 0 4px;font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:600}
+  .split .col.city h3{color:var(--navy)} .split .col.mgr h3{color:var(--orange)}
+  .split .col .sub{font-size:12.5px;color:var(--muted);margin:0 0 15px}
+  .split ul{margin:0;padding:0;list-style:none}
+  .split li{position:relative;padding:0 0 12px 24px;font-size:13.5px;line-height:1.5;color:#3A4A63}
+  .split li:last-child{padding-bottom:0}
+  .split li::before{content:"";position:absolute;left:0;top:6px;width:10px;height:10px;border-radius:3px}
+  .split .col.city li::before{background:var(--navy)} .split .col.mgr li::before{background:var(--orange)}
+  .split li b{color:var(--ink);font-weight:600}
+  @media(max-width:820px){.split{grid-template-columns:1fr}}
+  details.disc{margin-top:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);overflow:hidden}
+  details.disc>summary{list-style:none;cursor:pointer;padding:17px 22px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tnr-gray);display:flex;justify-content:space-between;align-items:center}
+  details.disc>summary::-webkit-details-marker{display:none}
+  details.disc>summary::after{content:"+";font-size:20px;color:var(--orange)} details.disc[open]>summary::after{content:"–"}
+  .disc-body{padding:0 22px 22px}
+  .mech{background:var(--navy);color:#fff;border-radius:var(--radius);padding:24px}
+  .mech .lab{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--tnr-accent);margin:0 0 13px}
+  .formula{display:flex;align-items:center;gap:11px;flex-wrap:wrap;font-size:14.5px;font-weight:600;margin-bottom:18px}
+  .formula .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:10px 13px}
+  .formula .chip.res{background:var(--tnr-green);border-color:var(--tnr-green)} .formula .op{color:#8FA0BF;font-size:17px}
+  .mechgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+  .mechgrid .n{font-size:21px;font-weight:700;color:#fff;line-height:1} .mechgrid .n small{font-size:12.5px;color:var(--tnr-accent);font-weight:600}
+  .mechgrid .d{font-size:12.5px;color:#B9C2C7;margin-top:6px;line-height:1.5}
+  @media(max-width:720px){.mechgrid{grid-template-columns:1fr}.formula{font-size:13px}}
+  .esc{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:20px}
+  .esc .e{background:#fff;border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:12px;padding:17px}
+  .esc .e .h{font-size:13px;font-weight:600;margin:0 0 5px} .esc .e p{margin:0;font-size:12.5px;line-height:1.5;color:#5B6B85}
+  @media(max-width:820px){.esc{grid-template-columns:1fr}}
+  .myth{background:var(--navy-deep);color:#fff;border-radius:var(--radius);padding:24px;margin-top:20px}
+  .myth .lab{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--tnr-accent);margin:0 0 13px}
+  .myth-rows{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .myth-rows .t{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin:0 0 7px}
+  .myth-rows .no .t{color:#FF8A5C} .myth-rows .yes .t{color:var(--tnr-accent)}
+  .myth-rows p{margin:0;font-size:13.5px;line-height:1.55;color:#C7D2E5}
+  @media(max-width:720px){.myth-rows{grid-template-columns:1fr}}
+
+  .scope-wrap{display:grid;grid-template-columns:360px minmax(0,1fr);gap:22px;margin-top:28px;align-items:start}
+  @media(max-width:960px){.scope-wrap{grid-template-columns:1fr}}
+  .spanel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 1px 2px rgba(21,35,68,.04)}
+  .spanel .ptitle{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--tnr-gray);margin:0 0 3px}
+  .spanel .psub{font-size:12.5px;color:var(--muted);margin:0 0 15px}
+  .sfield{margin-bottom:14px}
+  .sfield-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:12px}
+  .sfield-h label{font-size:13px;font-weight:600} .sfield-h output{font-size:13.5px;font-weight:700;color:var(--orange);font-variant-numeric:tabular-nums}
+  .scope input[type=range],.rng-in{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:#E6EAEF;outline:none;margin:0;cursor:pointer}
+  .scope input[type=range]::-webkit-slider-thumb,.rng-in::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--orange);border:none;cursor:grab;box-shadow:0 1px 3px rgba(241,90,36,.45)}
+  .scope input[type=range]::-moz-range-thumb,.rng-in::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--orange);border:none}
+  .stoggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+  .stoggle .lb{font-size:13px;font-weight:600}
+  .swi{position:relative;width:48px;height:26px;border-radius:99px;background:var(--tnr-green);border:none;cursor:pointer;flex:0 0 auto;transition:background .16s;padding:0}
+  .swi[aria-checked=false]{background:#CBD3DC}
+  .swi::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .16s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .swi[aria-checked=true]::after{transform:translateX(22px)}
+  .sseg{display:grid;grid-auto-flow:column;gap:7px;margin-top:6px}
+  .sseg button{padding:9px 6px;border-radius:8px;border:1px solid #DDE3EA;background:#fff;font:inherit;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:.14s}
+  .sseg button[aria-pressed=true]{background:var(--orange);border-color:var(--orange);color:#fff}
+  .sublock{margin-top:6px;padding:13px 15px;background:var(--bg);border-radius:10px} .sublock.is-off{display:none}
+  .sright{display:flex;flex-direction:column;gap:15px;min-width:0}
+  .bsum{background:var(--navy);color:#fff;border-radius:var(--radius);padding:14px 18px;font-size:13.5px;font-weight:500;line-height:1.5}
+  .bsum b{color:var(--tnr-accent);font-weight:700}
+  .scard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:0 1px 2px rgba(21,35,68,.04)}
+  .scard h3{margin:0 0 4px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--tnr-gray)}
+  #scopeChart{display:block;width:100%;height:auto}
+  .slegend{display:flex;gap:18px;font-size:12px;color:#5B6B85;margin-top:11px;flex-wrap:wrap}
+  .slegend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:6px;vertical-align:3px}
+  .skpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:620px){.skpis{grid-template-columns:1fr}}
+  .skpi{border-radius:var(--radius);padding:16px 17px;border:1px solid var(--line);background:#fff}
+  .skpi .k{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
+  .skpi .v{font-size:22px;font-weight:700;line-height:1.02;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .skpi .s{font-size:11px;margin-top:5px;line-height:1.4}
+  .skpi.bad{background:var(--red-bg);border-color:#F6D6CF}.skpi.bad .k{color:var(--red)}.skpi.bad .s{color:#7A4038}
+  .skpi.good{background:var(--green-bg);border-color:#CBEBD8}.skpi.good .k{color:var(--tnr-green)}.skpi.good .s{color:#3C6B54}
+  .skpi.gold{background:var(--gold-bg);border-color:#EAD9AC}.skpi.gold .k{color:#9A7016}.skpi.gold .s{color:#7d5b13}
+  .engcard{background:var(--tnr-gray);color:#fff;border-radius:var(--radius);padding:18px 20px}
+  .engcard h3{margin:0 0 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tnr-accent);font-weight:600}
+  .engrow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .engrow .us{font-size:24px;font-weight:700} .engrow .vs{color:#9AA6B8;font-size:12px}
+  .engrow .them{font-size:16px;font-weight:600;color:#B9C2C7} .engrow .x3{background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px}
+  .engcard p{margin:10px 0 0;font-size:12px;line-height:1.5;color:#B9C2C7}
+  .snarr{background:var(--gold-bg);border-left:4px solid var(--gold);border-radius:10px;padding:16px 20px;font-size:14.5px;line-height:1.6;color:#5a4413;margin:0}
+  .snarr b{font-weight:700;color:#3d2d08}
+  .assump{font-size:11.5px;color:var(--muted);line-height:1.5;margin:2px 0 0}
+
+  .acthead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:22px}
+  .exall{display:flex;gap:8px}
+  .exall button{background:#fff;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--tnr-gray);padding:9px 14px;cursor:pointer;transition:.14s}
+  .exall button:hover{border-color:var(--tnr-accent);color:var(--tnr-green)}
+  #catlist{margin-top:16px;display:flex;flex-direction:column;gap:11px}
+  .cat{border:1px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden}
+  .cat-head{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:none;border:none;font:inherit;cursor:pointer;padding:17px 20px}
+  .cat-head:hover{background:#FAFBFC}
+  .cat-head .chev{font-size:19px;color:#C3CBD6;transition:transform .18s;flex:0 0 auto} .cat.open .cat-head .chev{transform:rotate(90deg)}
+  .cat-head .nm{font-size:15.5px;font-weight:600;flex:1 1 auto}
+  .cat-head .meta{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap}
+  .cat-head .meta b{color:var(--tnr-green);font-weight:700}
+  .rc{display:inline-block;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:99px;flex:0 0 auto}
+  .rc.high{background:var(--red-bg);color:var(--red)} .rc.mod{background:var(--yellow-bg);color:#8A5A16} .rc.none{background:#EEF2F6;color:var(--muted)}
+  .cat-body{display:none;padding:4px 20px 20px;border-top:1px solid var(--line)} .cat.open .cat-body{display:block}
+  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+  @media(max-width:680px){.tiles{grid-template-columns:1fr}}
+  .tile{border:1px solid var(--line);border-radius:12px;padding:15px 16px;transition:border-color .14s,background .14s}
+  .tile.sel{border-color:var(--tnr-green);background:var(--green-bg)}
+  .tile .tt{font-size:14px;font-weight:600;margin:0 0 4px;line-height:1.25}
+  .tile .td{font-size:12.5px;color:#5B6B85;line-height:1.45;margin:0 0 7px}
+  .tile .tm{font-size:11.5px;color:var(--orange);font-weight:600;margin:0 0 10px}
+  .lvl{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .lvl button{border:1px solid #DDE3EA;background:#fff;border-radius:7px;font:inherit;font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);padding:8px 4px;cursor:pointer;transition:.13s;line-height:1.1}
+  .lvl button[aria-pressed=true]{background:var(--tnr-green);border-color:var(--tnr-green);color:#fff}
+  .lvl button.off[aria-pressed=true]{background:#5B6B85;border-color:#5B6B85}
+  .tslide{display:flex;align-items:center;gap:11px;margin-top:11px}
+  .tslide .budval{font-size:14px;font-weight:700;color:var(--tnr-green);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:52px;text-align:right}
+
+  .plan{background:var(--navy);color:#fff;padding:56px 28px}
+  .plan-inner{max-width:1180px;margin:0 auto}
+  .plan .eyebrow{color:var(--tnr-accent)} .plan h2.big{color:#fff} .plan .lede{color:#C7D2E5}
+  .amort{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:var(--radius);padding:20px 22px;margin-top:24px;display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:center}
+  @media(max-width:720px){.amort{grid-template-columns:1fr}}
+  .amort .a-h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tnr-accent);font-weight:600;margin:0 0 10px;display:flex;justify-content:space-between}
+  .amort .a-h b{color:#fff}
+  .yearbars{display:flex;align-items:flex-end;gap:8px;height:96px}
+  .yearbars .yb{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .yearbars .yb .bar{width:100%;background:var(--gold);border-radius:5px 5px 0 0;min-height:4px}
+  .yearbars .yb .amt{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+  .yearbars .yb .yr{font-size:10px;color:#9AA6B8}
+  .plan-card{background:#fff;color:var(--ink);border-radius:var(--radius);padding:8px;margin-top:20px;overflow:hidden}
+  table.plan-t{width:100%;border-collapse:collapse;font-size:14px}
+  table.plan-t th{text-align:left;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:15px 16px 9px}
+  table.plan-t th.r,table.plan-t td.r{text-align:right}
+  table.plan-t td{padding:11px 16px;border-top:1px solid #F1F4F7;vertical-align:middle}
+  table.plan-t td.area{font-weight:600} table.plan-t td .sub{font-size:12px;color:var(--muted);font-weight:400}
+  table.plan-t td.r{font-variant-numeric:tabular-nums;font-weight:700;color:var(--tnr-green)}
+  table.plan-t td .pslide{display:flex;align-items:center;gap:9px;min-width:150px}
+  table.plan-t tr.cathdr td{background:#FAFBFC;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tnr-gray);font-weight:700;padding:9px 16px}
+  table.plan-t tfoot td{border-top:2px solid var(--line);font-weight:700;font-size:16px;padding:15px 16px;color:var(--ink)}
+  .plan-empty{padding:38px 20px;text-align:center;color:var(--muted);font-size:15px}
+  .plan-foot{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:18px}
+  @media(max-width:720px){.plan-foot{grid-template-columns:1fr}}
+  .pf{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:17px}
+  .pf .k{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tnr-accent);font-weight:600;margin-bottom:6px}
+  .pf .v{font-size:22px;font-weight:700} .pf .s{font-size:11.5px;color:#B9C2C7;margin-top:5px;line-height:1.45}
+  .plan-note{font-size:12px;color:#8FA0BF;margin:16px 0 0;line-height:1.55}
+
+  /* budget / reserve */
+  .budget{background:#fff;border-top:1px solid var(--line)}
+  .budget-inner{max-width:1180px;margin:0 auto;padding:56px 28px}
+  .resctl{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:24px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+  .resctl label{font-size:12px;font-weight:600;color:var(--tnr-gray)} .resctl input{max-width:220px}
+  .resctl output{font-size:13px;font-weight:700;color:var(--orange)}
+  .ladder{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+  .lrow{display:grid;grid-template-columns:210px 1fr;gap:16px;align-items:center}
+  @media(max-width:680px){.lrow{grid-template-columns:1fr}}
+  .lrow .ll .nm{font-size:14.5px;font-weight:600} .lrow .ll .cl{font-size:11.5px;color:var(--muted)}
+  .lrow .lbar-wrap{display:flex;align-items:center;gap:12px}
+  .lbar{height:34px;border-radius:7px;min-width:2px;transition:width .25s}
+  .lbar.res{background:#CBD3DC} .lbar.aip{background:var(--gold)} .lbar.comm{background:var(--tnr-green)}
+  .lval{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .health{margin-top:22px;border-radius:12px;padding:18px 22px;font-size:14.5px;line-height:1.55}
+  .health.ok{background:var(--green-bg);border-left:4px solid var(--tnr-green);color:#1f4a35}
+  .health.warn{background:var(--red-bg);border-left:4px solid var(--red);color:#5c211a}
+  .health b{font-weight:700}
+  .classtab{width:100%;border-collapse:collapse;font-size:13px;margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .classtab th{background:#FAFBFC;text-align:left;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .classtab td{padding:11px 14px;border-bottom:1px solid #F1F4F7;vertical-align:top}
+  .classtab tr:last-child td{border-bottom:none}
+  .classtab .cbadge{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;font-weight:700;font-size:12px;color:#fff}
+  .classtab td .acc{font-weight:700;font-variant-numeric:tabular-nums}
+  .rollnote{font-size:13px;color:#5B6B85;line-height:1.6;margin:20px 0 0;background:var(--bg);border-radius:10px;padding:16px 18px}
+  .rollnote b{color:var(--ink)}
+  .budnote{font-size:11.5px;color:var(--muted);margin:14px 0 0;line-height:1.5}
+
+  .take{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px}
+  .tk{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;gap:15px}
+  .tk .chk{flex:0 0 auto;width:29px;height:29px;border-radius:8px;background:var(--green-bg);color:var(--tnr-green);display:grid;place-items:center;font-weight:700;font-size:15px}
+  .tk h3{margin:0 0 5px;font-size:15px;font-weight:600} .tk p{margin:0;font-size:13.5px;line-height:1.55;color:#5B6B85}
+  @media(max-width:720px){.take{grid-template-columns:1fr}}
+  .quote{margin-top:26px;background:var(--navy);color:#fff;border-radius:var(--radius);padding:30px 32px}
+  .quote p{margin:0 0 12px;font-size:20px;line-height:1.5;font-weight:500}
+  .quote .who{font-size:13px;color:#93A4C4} .quote .q{color:var(--orange);font-size:36px;font-weight:700;line-height:0;position:relative;top:13px}
+
+  .close{background:linear-gradient(160deg,var(--tnr-green) 0%,#0E3F2B 100%);color:#fff;padding:60px 28px;text-align:center}
+  .close h2{font-size:31px;font-weight:700;margin:0 0 14px}
+  .close p{font-size:16.5px;color:#CDE6DA;max-width:600px;margin:0 auto 26px;line-height:1.6}
+  .btn{display:inline-block;background:var(--orange);color:#fff;text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:15px 32px;border-radius:10px;transition:.15s}
+  .btn:hover{background:#D94A18}
+  footer{background:var(--navy-deep);color:#7E8CA8;text-align:center;padding:24px;font-size:12px;line-height:1.6}
+  footer a{color:#9FB0CC}
+  .placeholder{display:inline-block;background:#FFE6DB;color:var(--orange);font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px}
+
+  #cart{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--tnr-gray);color:#fff;border-top:3px solid var(--tnr-green);box-shadow:0 -6px 24px rgba(0,0,0,.18);transform:translateY(110%);transition:transform .22s ease;padding:12px 20px}
+  #cart.show{transform:translateY(0)}
+  .cart-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .cart-lab{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--tnr-accent);font-weight:600;display:flex;align-items:center;gap:8px}
+  .cart-lab .dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+  .cart-cell{display:flex;flex-direction:column;gap:1px}
+  .cart-cell .ck{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:#9AA6B8;font-weight:600}
+  .cart-cell .cv{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+  .cart-cell .cv .strike{text-decoration:line-through;color:#8B95A5;font-weight:600;font-size:13px;margin-left:6px}
+  .cart-cell .cv .save{color:var(--tnr-accent);font-size:11px;font-weight:600;margin-left:6px}
+  .cart-spacer{flex:1 1 auto}
+  .cart-cta{background:var(--orange);color:#fff;text-decoration:none;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:11px 20px;border-radius:9px;white-space:nowrap}
+  @media(max-width:820px){.cart-in{gap:14px}.cart-lab,.cart-cta{display:none}.cart-cell .cv{font-size:14px}}
+</style>
+
+<header class="topbar">
+  <div class="brand"><div class="mark">TNR</div><h1>Tenera</h1><span class="deck">Inspections</span></div>
+  <nav class="navlinks">
+    <a href="#usecase">Why</a><a href="#rsto">The score</a><a href="#scope">Your numbers</a>
+    <a href="#inspect">What we check</a><a href="#plan">Your plan</a><a href="#budget">Budget</a><a href="#takeaways">Takeaways</a>
+  </nav>
+</header>
+
+<section class="hero"><div class="hero-inner">
+  <span class="eyebrow">Rental &amp; high-rise building inspections</span>
+  <h2>The building always tells you what it needs. Now the City grades how well you listen.</h2>
+  <p>We inspect every part of your building on a schedule, write down what we find, and hand you a clear, priced plan — before small problems become expensive ones, and before an inspector puts a coloured sign on your door.</p>
+  <div class="promise">We turn what would have been <b>an emergency six months from now</b> into <b>planned work that saves money and stress</b>.</div>
+  <div class="herometa">
+    <div><span class="k">One inspection</span><span class="v">One flat price</span></div>
+    <div><span class="k">Your contractor</span><span class="v acc">You tender &amp; choose</span></div>
+    <div><span class="k">RentSafeTO</span><span class="v">Score-ready plan</span></div>
+  </div>
+</div></section>
+
+<section class="sec" id="usecase">
+  <span class="eyebrow"><span class="act-num">01</span>The problem</span>
+  <h2 class="big">Most managers are reactive — because no one is watching the whole building.</h2>
+  <div class="rule"></div>
+  <p class="lede">A crack that's cheap today saws through the concrete tomorrow. We watch it all — so nothing becomes a surprise, a work order, or a downgraded score on a sign every tenant walks past.</p>
+  <div class="flip">
+    <div class="box bad"><p class="t">Reactive — what it costs</p><p>A hairline crack in the asphalt gets ignored. Water gets under it, freezes, and cuts through to the slab. What was <b>$5 a foot</b> to seal is now <b>$50 a foot</b> to rebuild.</p></div>
+    <div class="arrow">→</div>
+    <div class="box good"><p class="t">Planned — what we do</p><p>We catch it on the scheduled inspection, put it on your plan with a stated price, and it's sealed on your timeline — not the day the slab fails or the inspector arrives.</p></div>
+  </div>
+</section>
+
+<section class="rsto" id="rsto"><div class="rsto-inner">
+  <span class="citytag"><i></i>City of Toronto · RentSafeTO · in effect since June 15, 2026</span>
+  <h2 class="big">The City now inspects your building — and posts the result on your door.</h2>
+  <div class="rule"></div>
+  <p class="lede">RentSafeTO covers ~3,600 rental buildings (3+ storeys, 10+ units). Each is evaluated every two years against 50 scored categories, and since June 15 must display a green, yellow, or red sign at its entrance.</p>
+  <div class="signs">
+    <div class="sign g"><div class="band">Green · 85–100%</div><div class="rng">Satisfactory</div><div class="desc">Meets most or all standards; few or no violations.</div><span class="share">≈ 75% of buildings</span></div>
+    <div class="sign y"><div class="band">Yellow · 70–84%</div><div class="rng">Needs improvement</div><div class="desc">Meets some standards; may have some violations.</div><span class="share">≈ 21% of buildings</span></div>
+    <div class="sign r"><div class="band">Red · 0–69%</div><div class="rng">Needs significant work</div><div class="desc">Meets few standards; may have several violations.</div><span class="share">≈ 3% of buildings</span></div>
+  </div>
+  <div class="split">
+    <div class="col city"><h3>How the City runs it</h3><p class="sub">Municipal Code Ch. 354 &amp; 629</p><ul>
+      <li>Evaluated <b>every two years</b>; scheduled so you can unlock common areas.</li>
+      <li>The officer walks <b>interior and exterior</b>, records notes and photos.</li>
+      <li>Health or life-safety issues get an <b>order on the spot</b>.</li>
+      <li>The colour is <b>refreshed daily</b> as orders are issued or cleared.</li></ul></div>
+    <div class="col mgr"><h3>What you're on the hook for</h3><p class="sub">Owner &amp; operator obligations</p><ul>
+      <li><b>Post the sign</b> at the entrance; replace within <b>14 days</b> of a colour change.</li>
+      <li><b>Disclose the rating</b> to every prospective tenant, and yearly to existing ones.</li>
+      <li>Post the <b>full evaluation</b> on the Tenant Notification Board.</li>
+      <li>Keep a mandatory, scored <b>5-year State of Good Repair (Capital) Plan</b>.</li></ul></div>
+  </div>
+  <details class="disc"><summary>The details — scoring, enforcement &amp; the myths</summary><div class="disc-body">
+    <div class="mech">
+      <p class="lab">How the score is built</p>
+      <div class="formula"><span class="chip">Proactive score</span><span class="op">−</span><span class="chip">Reactive deductions</span><span class="op">=</span><span class="chip res">Total score</span></div>
+      <div class="mechgrid">
+        <div><div class="n">50 <small>categories</small></div><div class="d">Each scored 1–3, weighted by risk. 17 high-risk categories carry <b>51%</b> — most are envelope, balcony and structure.</div></div>
+        <div><div class="n">−1% / −2%</div><div class="d">Each Order/Notice costs 1% for 30 days; an Emergency Order 2% for four months. They revert when fixed.</div></div>
+        <div><div class="n">Daily <small>refresh</small></div><div class="d">Percentile-ranked and updated daily — your colour can slip purely from open orders.</div></div>
+      </div>
+    </div>
+    <div class="esc">
+      <div class="e"><div class="h">Audit</div><p>Lowest 2.5% get a full audit — every common area, garage, grounds, plus a door-to-door tenant canvass.</p></div>
+      <div class="e"><div class="h">Targeted engagement</div><p>Score drops 5%+ for two months, or red for two months → the City sets up on your property and talks to tenants.</p></div>
+      <div class="e"><div class="h">Orders &amp; re-inspection</div><p>Orders posted on the board; officer re-inspects ~5 days after the deadline.</p></div>
+    </div>
+    <div class="myth"><p class="lab">Straight talk — what the colour does and doesn't do</p><div class="myth-rows">
+      <div class="no"><div class="t">It does NOT</div><p>Ban you from leasing or raising rent. The colour is a maintenance signal, not a closure. Rent stays provincial under the RTA.</p></div>
+      <div class="yes"><div class="t">It DOES</div><p>Put a public sign on your door, force disclosure to every prospective tenant, and escalate City attention. An open unit order can block <b>that unit</b> until cleared.</p></div>
+    </div></div>
+  </div></details>
+</div></section>
+
+<section class="sec scope" id="scope">
+  <span class="eyebrow"><span class="act-num">02</span>Your building, your numbers</span>
+  <h2 class="big">What does waiting actually cost <em>you</em>?</h2>
+  <div class="rule"></div>
+  <p class="lede">Slide in the shape of your building for three futures. Then, as you pick what to inspect below, the gold line drops — the more we watch, the lower your future maintenance.</p>
+  <div class="scope-wrap">
+    <aside class="spanel">
+      <p class="ptitle">Describe your building</p><p class="psub">Rough is fine — this is a scale, not a quote.</p>
+      <div class="sfield"><div class="sfield-h"><label for="sp_floors">Floors</label><output id="o_floors">12</output></div><input type="range" id="sp_floors" min="3" max="40" step="1" value="12"></div>
+      <div class="sfield"><div class="sfield-h"><label for="sp_upf">Apartments per floor</label><output id="o_upf">8</output></div><input type="range" id="sp_upf" min="2" max="20" step="1" value="8"></div>
+      <div class="sfield"><div class="sfield-h"><label for="sp_age">Building age</label><output id="o_age">30 yrs</output></div><input type="range" id="sp_age" min="0" max="70" step="1" value="30"></div>
+      <div class="stoggle"><span class="lb">Balconies</span><button class="swi" id="sw_balc" role="switch" aria-checked="true"></button></div>
+      <div class="sublock" id="balBlock">
+        <div class="sfield" style="margin-bottom:0"><div class="sfield-h"><label>Balcony type</label></div>
+          <div class="sseg" id="seg_baltype"><button data-v="std" aria-pressed="true">Standard slab</button><button data-v="inv" aria-pressed="false">Inverted roof</button></div>
+          <p class="assump" style="margin-top:7px">Inverted-roof balconies (living space below) run far more to repair; older concrete balconies cost more too.</p>
+        </div>
+      </div>
+      <div class="stoggle"><span class="lb">Heated ramp</span><button class="swi" id="sw_heat" role="switch" aria-checked="true"></button></div>
+      <div class="sfield" style="margin-top:14px"><div class="sfield-h"><label>Pool</label></div><div class="sseg" id="seg_pool"><button data-v="none" aria-pressed="true">None</button><button data-v="indoor" aria-pressed="false">Indoor</button><button data-v="outdoor" aria-pressed="false">Outdoor</button></div></div>
+      <div class="sfield"><div class="sfield-h"><label for="sp_surf">Above-ground / surface spaces</label><output id="o_surf">40</output></div><input type="range" id="sp_surf" min="0" max="200" step="5" value="40"></div>
+      <div class="stoggle"><span class="lb">Underground parking</span><button class="swi" id="sw_ug" role="switch" aria-checked="true"></button></div>
+      <div class="sublock" id="ugBlock">
+        <div class="sfield"><div class="sfield-h"><label for="sp_uglev">Underground levels</label><output id="o_uglev">1</output></div><input type="range" id="sp_uglev" min="1" max="5" step="1" value="1"></div>
+        <div class="sfield" style="margin-bottom:0"><div class="sfield-h"><label for="sp_ugsp">Underground spaces</label><output id="o_ugsp">80</output></div><input type="range" id="sp_ugsp" min="0" max="300" step="10" value="80"></div>
+      </div>
+      <div class="sfield" style="margin-top:14px"><div class="sfield-h"><label for="sp_elev">Elevator shafts</label><output id="o_elev">2</output></div><input type="range" id="sp_elev" min="1" max="10" step="1" value="2"></div>
+      <div class="sfield"><div class="sfield-h"><label>Elevator type</label></div><div class="sseg" id="seg_elev"><button data-v="cable" aria-pressed="true">Cable</button><button data-v="piston" aria-pressed="false">Piston</button></div></div>
+      <div class="sfield" style="margin-top:14px;margin-bottom:0"><div class="sfield-h"><label for="sp_hz">Planning window</label><output id="o_hz">15 yrs</output></div><input type="range" id="sp_hz" min="10" max="25" step="1" value="15"></div>
+    </aside>
+    <div class="sright">
+      <div class="bsum" id="bsum">—</div>
+      <div class="scard">
+        <h3>Cumulative restoration spend — three futures</h3>
+        <svg id="scopeChart" viewBox="0 0 1000 360" role="img" aria-label="Cumulative restoration spend"></svg>
+        <div class="slegend">
+          <span><i style="background:var(--red)"></i>Let it ride — forced, all at once</span>
+          <span><i style="background:var(--green)"></i>Regular — market cost</span>
+          <span><i style="background:var(--gold)"></i>Maintenance reduced by Tenera inspections</span>
+        </div>
+      </div>
+      <div class="skpis">
+        <div class="skpi bad"><div class="k">Let it ride</div><div class="v" id="k_def">—</div><div class="s" id="k_def_s">—</div></div>
+        <div class="skpi good"><div class="k">Regular · market cost</div><div class="v" id="k_mkt">—</div><div class="s" id="k_mkt_s">—</div></div>
+        <div class="skpi gold"><div class="k">With Tenera · reduced</div><div class="v" id="k_tnr">—</div><div class="s" id="k_tnr_s">—</div></div>
+      </div>
+      <div class="engcard">
+        <h3>The inspection itself</h3>
+        <div class="engrow"><span class="us" id="e_us">—</span><span class="vs">with us · incl. 3rd-party P.Eng.</span><span class="vs">vs</span><span class="them" id="e_them">—</span><span class="x3" id="e_x">—</span></div>
+        <p id="e_why">An outside engineer mobilizes and bills a one-off condition assessment — hourly, per building, with report-writing on top. We run inspections at volume with our own P.Eng and software that turns the findings straight into the plan below — so the same inspection lands near a third of the cost.</p>
+      </div>
+      <p class="snarr" id="s_narr">—</p>
+      <p class="assump">Illustrative estimate using GTA restoration benchmarks for Tenera-scope work (envelope, balconies, garage, waterproofing, roof, site) — not mechanical, electrical, or interior capital. Scales with the inputs; Tenera calibrates on inspection. Dollar figures are placeholders, not a quote.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="inspect">
+  <span class="eyebrow"><span class="act-num">03</span>What we check &amp; fix</span>
+  <h2 class="big">The City's score sheet — and what we do about every line of it.</h2>
+  <div class="rule"></div>
+  <p class="lede">Open any category, then set a rough budget on the areas you want to plan for — the <b>Small / Medium / Large</b> buttons, or drag the slider to an exact number. Each area's range is scaled to your building. Your plan and running total build as you go.</p>
+  <div class="acthead"><div class="exall"><button id="expAll">Expand all</button><button id="colAll">Collapse all</button></div></div>
+  <div id="catlist"></div>
+</section>
+
+<section class="plan" id="plan"><div class="plan-inner">
+  <span class="eyebrow">Your maintenance plan</span>
+  <h2 class="big">A plan and budget — built from what you selected.</h2>
+  <div class="rule"></div>
+  <p class="lede">Grouped the way the City groups them, at the budgets you set. Fine-tune any line here, and choose how many years to spread the work over — the plan amortizes so you see the cost per year.</p>
+  <div class="amort">
+    <div><div class="a-h"><span>Spread the work over</span><b id="a_years">3 years</b></div><input type="range" class="rng-in" id="sp_years" min="1" max="8" step="1" value="3"><div class="a-h" style="margin-top:10px"><span>Per year (average)</span><b id="a_peryear">—</b></div></div>
+    <div class="yearbars" id="yearbars"></div>
+  </div>
+  <div class="plan-card"><div id="planBody"></div></div>
+  <div class="plan-foot">
+    <div class="pf"><div class="k">Areas selected</div><div class="v" id="p_count">—</div><div class="s" id="p_count_s">set a budget on areas above</div></div>
+    <div class="pf"><div class="k">Total plan · with Tenera</div><div class="v" id="p_total">—</div><div class="s" id="p_total_s">the budgets you allocated</div></div>
+    <div class="pf"><div class="k">Same plan at market rates</div><div class="v" id="p_market">—</div><div class="s" id="p_market_s">—</div></div>
+  </div>
+  <p class="plan-note">Illustrative averages and placeholder budgets. On a real inspection we replace every average with a measured quantity, a photo, and a stated price — and the total becomes your budget and your RentSafeTO capital plan in one document.</p>
+</div></section>
+
+<section class="budget" id="budget"><div class="budget-inner">
+  <span class="eyebrow"><span class="act-num">04</span>Budgeting &amp; your reserve</span>
+  <h2 class="big">You don't budget one number — you budget a ladder.</h2>
+  <div class="rule"></div>
+  <p class="lede">From a safe ceiling you set aside, down to the exact tendered price. Here's how the numbers relate for the plan you just built — and how to keep a reserve that's actually a reserve.</p>
+
+  <div class="resctl">
+    <label for="sp_res">Reserve you set aside</label>
+    <input type="range" class="rng-in" id="sp_res" min="1" max="3" step="0.1" value="2">
+    <output id="o_res">2.0× the plan</output>
+  </div>
+
+  <div class="ladder" id="ladder"></div>
+  <div class="health" id="health">—</div>
+
+  <table class="classtab">
+    <thead><tr><th style="width:220px">Estimate class</th><th style="width:150px">Accuracy</th><th>What it's based on</th></tr></thead>
+    <tbody>
+      <tr><td><span class="cbadge" style="background:#8A9099">F</span> Foxtrot · Reserve</td><td><span class="acc">−50% / +100%</span></td><td>Order-of-magnitude — about double what you'd guess. The ceiling you set aside.</td></tr>
+      <tr><td><span class="cbadge" style="background:#B98A2E">E</span> Echo · Feasibility</td><td><span class="acc">−30% / +50%</span></td><td>Rough scoping, alternatives compared. Early screening only.</td></tr>
+      <tr><td><span class="cbadge" style="background:var(--gold)">D</span> Delta · Approval in principle</td><td><span class="acc">±20–30%</span></td><td>Current-state averages — what you'll likely spend. This is your plan above.</td></tr>
+      <tr><td><span class="cbadge" style="background:#6BA06F">C</span> Charlie · Schematic</td><td><span class="acc">±15–20%</span></td><td>Major components measured as the scope firms up.</td></tr>
+      <tr><td><span class="cbadge" style="background:#3E8A5A">B</span> Bravo · Known method</td><td><span class="acc">±10–15%</span></td><td>Work we've done before, priced from real quantities.</td></tr>
+      <tr><td><span class="cbadge" style="background:var(--tnr-green)">A</span> Alpha · Tendered / contract</td><td><span class="acc">−5% / +10%</span></td><td>Contract in hand. Exact amounts, and the firmest price earns a cash-flow discount.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="rollnote">
+    <b>Why the reserve has to be bigger than the work.</b> A real reserve leaves room for the things a plan can't schedule — a fire, a sudden roof leak, a structural surprise. If your reserve sits within ~1.5× of what you've actually committed to contracts, it isn't a reserve — double it. And whatever you don't spend <b>rolls over</b> into next year, so a well-set reserve grows a cushion instead of forcing a fee hike.
+  </div>
+  <p class="budnote">Estimate-class accuracy ranges per CIQS (Class A–D) and AACE International 18R-97 (Class 1–5 / rougher tiers). Figures here are illustrative placeholders applied to your selections, not a quote.</p>
+</div></section>
+
+<section class="sec" id="takeaways">
+  <span class="eyebrow"><span class="act-num">05</span>Meeting takeaways</span>
+  <h2 class="big">If you remember four things.</h2>
+  <div class="rule"></div>
+  <div class="take">
+    <div class="tk"><div class="chk">1</div><div><h3>Waiting multiplies the cost</h3><p>The same work compounds and gets forced on the worst timeline — planned and amortized, it's a fraction of that.</p></div></div>
+    <div class="tk"><div class="chk">2</div><div><h3>You stay in control</h3><p>We survey, spec and scope; <b>you</b> tender and choose the construction company. We never lock you in.</p></div></div>
+    <div class="tk"><div class="chk">3</div><div><h3>Score-ready by design</h3><p>Our inspection mirrors the City's 50 categories and produces your mandatory 5-year Capital Plan.</p></div></div>
+    <div class="tk"><div class="chk">4</div><div><h3>Cheaper together</h3><p>Our volume and packaged 3rd-party P.Eng. lower both the inspection (≈⅓ of a direct engineer) and your ongoing maintenance.</p></div></div>
+  </div>
+  <div class="quote"><span class="q">"</span><p>Client testimonial goes here — a short, specific line from a manager about what was so good about working with Tenera. <span class="placeholder">Boris to supply real quote + name</span></p><div class="who">— Property manager, [Building / Company]</div></div>
+</section>
+
+<section class="close">
+  <h2>Let's build your building's plan.</h2>
+  <p>Tell us what matters to you, and we'll turn the selections above into a real, score-ready plan — with measured quantities, photos, and stated prices.</p>
+  <a class="btn" href="#">Book an inspection</a>
+</section>
+
+<footer>
+  Tenera — Rental &amp; High-Rise Building Inspections · Draft for review<br>
+  RentSafeTO figures summarized from the City of Toronto research brief (Aug 6, 2026). Estimate-class ranges per CIQS &amp; AACE 18R-97. Dollar figures are illustrative placeholders, not quotes.
+</footer>
+
+<div id="cart"><div class="cart-in">
+  <span class="cart-lab"><span class="dot"></span>Your running total</span>
+  <div class="cart-cell"><span class="ck">Inspection</span><span class="cv"><span id="c_insp">—</span><span class="strike" id="c_insp_e">—</span></span></div>
+  <div class="cart-cell"><span class="ck">Plan total</span><span class="cv" id="c_plan">—</span></div>
+  <div class="cart-cell"><span class="ck">Maintenance / yr</span><span class="cv"><span id="c_maint">—</span><span class="strike" id="c_maint_m">—</span><span class="save" id="c_maint_s"></span></span></div>
+  <span class="cart-spacer"></span>
+  <a class="cart-cta" href="#">Book inspection</a>
+</div></div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+  var CB={balcony:{f:12000,p:0.40},garageSpace:{f:9000,p:0.45},garageLevel:{f:60000,p:0.50},
+    envelopeUnit:{f:8000,p:0.40},roofPSF:{f:22,p:0.60},asphaltSpace:{f:1500,p:0.40},
+    heatedRamp:{f:50000,p:0.50},elevShaft:{f:18000,p:0.50},poolIndoor:{f:120000,p:0.50},
+    poolOutdoor:{f:70000,p:0.50},siteUnit:{f:600,p:0.40},mechUnit:{f:500,p:0.45}};
+  var RUSH=1.20, MARKET_MULT=1.4, COVER_MAX=0.30, INV_MULT=6;
+  function ageR(a){return Math.min(2.2,Math.max(0.6,0.6+a/40));}
+  function ageP(a){return Math.min(1.6,Math.max(0.8,0.8+a/90));}
+  var S={floors:12,upf:8,age:30,balc:true,balType:"std",heat:true,pool:"none",surf:40,ug:true,uglev:1,ugsp:80,elev:2,elevType:"cable",hz:15};
+  var years=3, resMult=2.0;
+
+  function balCount(){ return S.balc ? Math.round(S.floors*S.upf*0.6) : 0; } // not every unit has one
+  function base(){
+    var units=S.floors*S.upf, foot=S.upf*850, items=[], invm=(S.balType==="inv"?INV_MULT:1);
+    function add(q,def,prev,cond){ if(q>0) items.push({f:q*def,p:prev,cond:cond!==false}); }
+    add(balCount(),CB.balcony.f*invm,CB.balcony.p);
+    add(S.ug?S.ugsp:0,CB.garageSpace.f,CB.garageSpace.p); add(S.ug?S.uglev:0,CB.garageLevel.f,CB.garageLevel.p);
+    add(units,CB.envelopeUnit.f,CB.envelopeUnit.p); add(foot,CB.roofPSF.f,CB.roofPSF.p);
+    add(S.surf,CB.asphaltSpace.f,CB.asphaltSpace.p); add(S.heat?1:0,CB.heatedRamp.f,CB.heatedRamp.p);
+    add(S.elev,CB.elevShaft.f*(S.elevType==="piston"?1.4:1.0),CB.elevShaft.p);
+    add(S.pool==="indoor"?1:0,CB.poolIndoor.f,CB.poolIndoor.p); add(S.pool==="outdoor"?1:0,CB.poolOutdoor.f,CB.poolOutdoor.p);
+    add(units,CB.siteUnit.f,CB.siteUnit.p,false); add(units,CB.mechUnit.f,CB.mechUnit.p,false);
+    var arF=ageR(S.age), apF=ageP(S.age), deferred=0, tenera=0;
+    items.forEach(function(it){ deferred+=it.f*(it.cond?arF:1)*RUSH; tenera+=it.f*it.p*(it.cond?apF:1); });
+    return {units:units, deferred:Math.round(deferred), tenera:Math.round(tenera), market:Math.round(tenera*MARKET_MULT),
+      forced:Math.max(2,Math.min(S.hz-1,Math.round(S.hz-(S.age/70)*(S.hz-2))))};
+  }
+  function money(v){var a=Math.abs(v),s=v<0?"-$":"$"; if(a>=1e6)return s+(a/1e6).toFixed(2)+"M"; if(a>=1e3)return s+Math.round(a/1e3)+"k"; return s+Math.round(a);}
+  function metric(k){return {units:S.floors*S.upf,balc:balCount(),ugsp:(S.ug?S.ugsp:0),surf:S.surf,foot:S.upf*850,elev:S.elev,one:1}[k];}
+
+  var CATS=[
+    {name:"Building Exterior",risk:"high",need:null,tiles:[
+      {id:"caulk",t:"Caulking &amp; flashing",d:"Exterior sealants and flashing — the cheapest waterproofing you'll ever buy.",w:6,ib:60,ip:1.0,im:"units",iu:"lin ft of failed sealant"},
+      {id:"repoint",t:"Brick &amp; mortar repointing",d:"Restoring the mortar between the bricks before the wall lets water in.",w:8,ib:12,ip:0.5,im:"units",iu:"sq ft of spalled mortar"},
+      {id:"brickcoat",t:"Brick coating &amp; protection",d:"The right breathable paint protects the brick and makes the building look cared-for.",w:5,ib:200,ip:3,im:"units",iu:"sq ft to recoat"},
+      {id:"cable",t:"Cable trays &amp; penetrations",d:"Trays and wall penetrations that trickle water into the brick — sealed.",w:2,ib:2,ip:0.03,im:"units",iu:"penetrations to seal"}
+    ]},
+    {name:"Balcony Guards",risk:"high",need:"balc",tiles:[
+      {id:"balguard",t:"Balcony guards &amp; edges",d:"Rusted or low guards, openings over 4\", sealing the leading edges — a life-safety flag.",w:10,ib:2,ip:0.06,im:"balc",iu:"guards to re-secure / coat",bal:1},
+      {id:"baldeck",t:"Deck coating &amp; slabs",d:"A proper deck coating seals the top so water can't delaminate the slab.",w:7,ib:3,ip:0.35,im:"balc",iu:"balcony decks to recoat",bal:1},
+      {id:"balcold",t:"Cold joints &amp; underside",d:"The joint where the balcony meets the unit is a classic ingress point.",w:4,ib:1,ip:0.12,im:"balc",iu:"ingress joints to seal",bal:1}
+    ]},
+    {name:"Windows",risk:"high",need:null,tiles:[
+      {id:"win",t:"Windows &amp; perimeter seals",d:"Around-window sealants and weathertightness — averaged across the building's window sizes.",w:5,ib:8,ip:0.4,im:"units",iu:"window perimeters to reseal"}
+    ]},
+    {name:"Exterior Doors",risk:"high",need:null,tiles:[
+      {id:"door",t:"Doors — interior &amp; exterior",d:"Every door checked for seal, operation and security.",w:3,ib:3,ip:0.1,im:"units",iu:"doors needing seal / hardware"}
+    ]},
+    {name:"Catch Basins &amp; Storm Drainage",risk:"high",need:null,tiles:[
+      {id:"drain",t:"Catch basins &amp; drains",d:"Storm drains, roof drains, sloping and safety covers — kept clear and sealed.",w:4,ib:2,ip:0.03,im:"units",iu:"basins/drains obstructed or ponding"}
+    ]},
+    {name:"Retaining Walls",risk:"high",need:null,tiles:[
+      {id:"retain",t:"Retaining walls &amp; parking-ramp entrances",d:"Anything holding back a change in grade — including the walls at the parking-ramp entrance. Cracks, lean and exposed rebar caught before they fail.",w:4,ib:1,ip:0.02,im:"units",iu:"wall sections cracking / leaning"}
+    ]},
+    {name:"Exterior Walkways",risk:"high",need:null,tiles:[
+      {id:"walk",t:"Walkways, ramps &amp; safety paint",d:"Wheelchair and senior ramps, handrails and surfaces — trip hazards and drainage.",w:5,ib:40,ip:0.6,im:"units",iu:"lin ft of walkway/ramp defects"},
+      {id:"stairs",t:"Stairs &amp; railings",d:"Wobbly railings and worn stairs are expensive — we have a cheaper way.",w:4,ib:2,ip:0.06,im:"units",iu:"railings/stairs to repair"},
+      {id:"heated",t:"Heated ramps",d:"Maintenance and repair so they work when the first storm hits.",w:3,ib:1,ip:0,im:"one",iu:"heated ramp system to service",need:"heat"}
+    ]},
+    {name:"Parking — Underground",risk:"mod",need:"ug",tiles:[
+      {id:"col",t:"Column bases",d:"A coat at the base of each column stops it getting eaten away.",w:6,ib:2,ip:0.05,im:"ugsp",iu:"column bases to coat"},
+      {id:"conc",t:"Concrete restoration — walls, ceilings, pillars",d:"Patch repairs through to complete jobs across the structure.",w:8,ib:40,ip:1.2,im:"ugsp",iu:"sq ft of spalling"},
+      {id:"crack",t:"Slab crack repair — ceiling &amp; floor",d:"Cracks in the deck above and the slab below, sealed before water tracks through.",w:4,ib:30,ip:1.0,im:"ugsp",iu:"lin ft of ceiling/floor cracks"},
+      {id:"ledge",t:"Ledge beams &amp; structural",d:"Structural ledge beams and bearing points inspected and repaired.",w:3,ib:2,ip:0.03,im:"ugsp",iu:"ledge beams to repair"},
+      {id:"joint",t:"Expansion &amp; control joints",d:"The item everyone forgets and everyone regrets. Sealed joints keep water out.",w:4,ib:20,ip:0.5,im:"ugsp",iu:"lin ft of joints to seal"},
+      {id:"traffic",t:"Traffic coatings",d:"Traffic-deck coatings on high-wear areas to stop salt and water penetration.",w:5,ib:200,ip:8,im:"ugsp",iu:"sq ft of coating due"},
+      {id:"ugramp",t:"Ramps",d:"The underground ramp deck and its coating — the hardest-worked concrete in the building.",w:3,ib:1,ip:0.02,im:"ugsp",iu:"ramp areas to restore"}
+    ]},
+    {name:"Parking — Above ground",risk:"mod",need:"surf",tiles:[
+      {id:"asph",t:"Asphalt &amp; surface crack sealing",d:"Seal for $5/ft now or rebuild what's beneath for $50/ft later.",w:4,ib:30,ip:2,im:"surf",iu:"lin ft of surface cracks"},
+      {id:"aboveramp",t:"Ramps &amp; curbs",d:"Ramp decks, curbs and their edges kept sound and drained.",w:2,ib:1,ip:0.02,im:"surf",iu:"ramp / curb areas"},
+      {id:"linepaint",t:"Line &amp; safety painting",d:"Stall lines, arrows and required safety markings refreshed.",w:2,ib:10,ip:0.5,im:"surf",iu:"stalls to repaint"},
+      {id:"abovedeck",t:"Elevated-deck coating",d:"Traffic coating on any elevated / above-grade parking deck.",w:3,ib:100,ip:4,im:"surf",iu:"sq ft of deck coating"}
+    ]},
+    {name:"Exterior Grounds",risk:"mod",need:null,tiles:[
+      {id:"grade",t:"Grading &amp; landscaping",d:"Sloping and drainage that sends water away from the building, not into it.",w:3,ib:2,ip:0.02,im:"units",iu:"grading / ponding areas"}
+    ]},
+    {name:"Also inspected — not on the City score sheet",risk:"none",need:null,tiles:[
+      {id:"roof",t:"Roof &amp; roof drains",d:"Membrane, flashing, drains and covers — before the leak shows on a ceiling.",w:9,ib:3,ip:0.05,im:"units",iu:"roof / flashing / drain items"},
+      {id:"elevpit",t:"Elevator pits &amp; shaft waterproofing",d:"Waterproofing the pit now beats a corroded cylinder or flooded pit later.",w:7,ib:1,ip:1,im:"elev",iu:"shaft pits to waterproof"},
+      {id:"mech",t:"Boiler, chiller &amp; utility rooms",d:"Condition, sealing and drainage of every mechanical room, documented.",w:4,ib:2,ip:0.03,im:"units",iu:"rooms to seal / service"},
+      {id:"laundry",t:"Laundry rooms",d:"Rental-specific and always a problem: condensation and drainage.",w:2,ib:1,ip:0.02,im:"units",iu:"moisture issues"},
+      {id:"compactor",t:"Compactor rooms",d:"Floors and walls sealed properly — not painted over moisture.",w:3,ib:1,ip:0.01,im:"units",iu:"surfaces to seal"},
+      {id:"sump",t:"Sump pits &amp; pumps",d:"Service the pit and set up dual pumps so a clog never means a flood.",w:3,ib:1,ip:0.01,im:"units",iu:"systems to service"},
+      {id:"lobby",t:"Lobbies &amp; amenity areas",d:"Floors, sealants, party rooms, patios — the spaces residents judge you on.",w:3,ib:2,ip:0.03,im:"units",iu:"finish items"},
+      {id:"pool",t:"Pool &amp; wet amenities",d:"Pool decks and the humidity-driven damage around indoor pools — sealed.",w:3,ib:3,ip:0,im:"one",iu:"wet areas to seal",need:"pool"},
+      {id:"graffiti",t:"Graffiti removal &amp; sealer",d:"Clear the city work order, then seal so the next tag washes off.",w:2,ib:2,ip:0.03,im:"units",iu:"walls to clean / seal"},
+      {id:"inunit",t:"In-unit repairs",d:"Individual repairs inside units — same organized process, same stated pricing.",w:2,ib:3,ip:0.1,im:"units",iu:"repairs logged"}
+    ]}
+  ];
+  var TILE={}; CATS.forEach(function(c,ci){ c.tiles.forEach(function(t){ t._ci=ci; TILE[t.id]=t; }); });
+  var bud={}; // tileId -> dollars (presence = selected)
+  var DEFAULTS=["caulk","repoint","balguard","drain","roof","asph"];
+  var open={}, inited=false;
+
+  var needMap;
+  function refreshNeeds(){ needMap={balc:S.balc,ug:S.ug,surf:S.surf>0,heat:S.heat,pool:S.pool!=="none"}; }
+  function catApplicable(c){ return c.need===null || needMap[c.need]; }
+  function tileApplicable(c,t){ return catApplicable(c) && (!t.need || needMap[t.need]); }
+  function found(t){ return Math.max(1, Math.round(t.ib + t.ip*metric(t.im))); }
+  function sumWeights(){ var s=0; CATS.forEach(function(c){ if(!catApplicable(c))return; c.tiles.forEach(function(t){ if(tileApplicable(c,t)) s+=t.w; }); }); return s||1; }
+  function tileBase(t){ // typical annual budget for this area, scaled to building + work type
+    var pa=base().tenera/S.hz, b=pa*t.w/sumWeights();
+    if(t.bal && S.balType==="inv") b*=INV_MULT;
+    return Math.max(500,b);
+  }
+  function tRange(t){ var b=tileBase(t); return {min:Math.max(250,Math.round(b*0.2/250)*250), max:Math.round(b*3/500)*500,
+    S:Math.round(b*0.5/250)*250, M:Math.round(b/250)*250, L:Math.round(b*2/500)*500}; }
+  function selCount(){ var n=0; for(var id in bud){ var t=TILE[id]; if(t && tileApplicable(CATS[t._ci],t)) n++; } return n; }
+  function selWeight(){ var s=0; for(var id in bud){ var t=TILE[id]; if(t && tileApplicable(CATS[t._ci],t)) s+=t.w; } return s; }
+  function coverage(){ return Math.min(1, selWeight()/sumWeights()); }
+  function planTotal(){ var s=0; for(var id in bud){ var t=TILE[id]; if(t && tileApplicable(CATS[t._ci],t)) s+=bud[id]; } return s; }
+
+  function inspection(){ var u=S.floors*S.upf, t=Math.round(2800 + u*55 + balCount()*25 + (S.ug?S.ugsp*14:0) + S.surf*7 + selCount()*380); return {t:t,e:t*3}; }
+
+  function drawChart(){
+    var m=base(), svg=$("scopeChart"),W=1000,H=360,PAD={t:26,r:20,b:38,l:76};
+    var N=S.hz, forced=m.forced, trickle=m.deferred*0.015;
+    var yellowTotal=Math.round(m.tenera*(1-COVER_MAX*coverage()));
+    var defS=[],mkS=[],tnS=[],i;
+    for(i=0;i<=N;i++){ mkS.push(m.market*i/N); tnS.push(yellowTotal*i/N); defS.push(i<forced?trickle*i:trickle*forced+m.deferred); }
+    var hi=Math.max(m.market,trickle*forced+m.deferred)*1.08,lo=0,pw=W-PAD.l-PAD.r,ph=H-PAD.t-PAD.b;
+    var X=function(x){return PAD.l+(N>0?x/N:0)*pw;}, Y=function(v){return PAD.t+(1-(v-lo)/(hi-lo))*ph;};
+    var s=[],g;
+    for(g=0;g<=4;g++){var val=lo+(hi-lo)*g/4,y=Y(val);
+      s.push('<line x1="'+PAD.l+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD.r)+'" y2="'+y.toFixed(1)+'" stroke="#EEF1F5"/>');
+      s.push('<text x="'+(PAD.l-12)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="12" fill="#9AA6B8" font-family="Poppins,sans-serif">'+money(val)+'</text>');}
+    for(i=0;i<=N;i+=Math.ceil(N/6)) s.push('<text x="'+X(i).toFixed(1)+'" y="'+(H-PAD.b+22)+'" text-anchor="middle" font-size="12" fill="#9AA6B8" font-family="Poppins,sans-serif">'+(i===0?'now':'yr '+i)+'</text>');
+    function poly(a){return a.map(function(v,i){return X(i).toFixed(1)+","+Y(v).toFixed(1);}).join(" ");}
+    var fill=mkS.map(function(v,i){return X(i).toFixed(1)+","+Y(v).toFixed(1);}).concat(tnS.map(function(v,i){return X(N-i).toFixed(1)+","+Y(tnS[N-i]).toFixed(1);})).join(" ");
+    s.push('<polygon points="'+fill+'" fill="rgba(224,168,46,.12)"/>');
+    s.push('<polyline points="'+poly(defS)+'" fill="none" stroke="var(--red)" stroke-width="3" stroke-linejoin="round"/>');
+    s.push('<polyline points="'+poly(mkS)+'" fill="none" stroke="var(--green)" stroke-width="3" stroke-linejoin="round"/>');
+    s.push('<polyline points="'+poly(tnS)+'" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linejoin="round"/>');
+    var fx=X(forced); s.push('<line x1="'+fx.toFixed(1)+'" y1="'+PAD.t+'" x2="'+fx.toFixed(1)+'" y2="'+(H-PAD.b)+'" stroke="var(--red)" stroke-width="1.2" stroke-dasharray="5 5"/>');
+    var lbl='Forced · yr '+forced,w=lbl.length*6.6+16;
+    s.push('<rect x="'+(fx-w/2).toFixed(1)+'" y="'+(PAD.t-22)+'" width="'+w.toFixed(1)+'" height="22" rx="6" fill="var(--red)"/>');
+    s.push('<text x="'+fx.toFixed(1)+'" y="'+(PAD.t-6)+'" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" font-family="Poppins,sans-serif">'+lbl+'</text>');
+    s.push('<circle cx="'+X(N).toFixed(1)+'" cy="'+Y(defS[N]).toFixed(1)+'" r="4.5" fill="var(--red)"/>');
+    s.push('<circle cx="'+X(N).toFixed(1)+'" cy="'+Y(mkS[N]).toFixed(1)+'" r="4.5" fill="var(--green)"/>');
+    s.push('<circle cx="'+X(N).toFixed(1)+'" cy="'+Y(tnS[N]).toFixed(1)+'" r="4.5" fill="var(--gold)"/>');
+    svg.innerHTML=s.join(""); return {yellowTotal:yellowTotal,m:m};
+  }
+
+  function renderScope(){
+    refreshNeeds();
+    var r=drawChart(), m=r.m, cov=coverage(), ins=inspection();
+    $("o_floors").textContent=S.floors; $("o_upf").textContent=S.upf; $("o_age").textContent=S.age+" yrs";
+    $("o_surf").textContent=S.surf; $("o_uglev").textContent=S.uglev; $("o_ugsp").textContent=S.ugsp;
+    $("o_elev").textContent=S.elev; $("o_hz").textContent=S.hz+" yrs";
+    $("ugBlock").className="sublock"+(S.ug?"":" is-off"); $("balBlock").className="sublock"+(S.balc?"":" is-off");
+    $("bsum").innerHTML="<b>"+m.units+" units</b> · "+S.floors+" fl · "+S.upf+"/fl · "+S.age+" yrs · "
+      +S.elev+" "+(S.elevType==="piston"?"piston":"cable")+" elev"+(S.balc?(" · "+balCount()+(S.balType==="inv"?" inv-roof":"")+" balconies"):"")
+      +(S.ug?" · "+S.uglev+"-lvl UG ("+S.ugsp+")":"")+(S.surf>0?" · "+S.surf+" surface":"")+(S.pool!=="none"?" · "+S.pool+" pool":"")+(S.heat?" · heated ramp":"");
+    var tnYr=r.yellowTotal/S.hz, mkYr=m.market/S.hz, mult=(m.deferred/Math.max(1,r.yellowTotal));
+    $("k_def").textContent=money(m.deferred); $("k_def_s").textContent="forced ~yr "+m.forced+" · no amortization";
+    $("k_mkt").textContent=money(m.market); $("k_mkt_s").textContent="≈ "+money(mkYr)+"/yr · market rates";
+    $("k_tnr").textContent=money(r.yellowTotal); $("k_tnr_s").textContent="≈ "+money(tnYr)+"/yr · "+Math.round(cov*100)+"% inspected → lower still";
+    $("e_us").textContent=money(ins.t); $("e_them").textContent=money(ins.e); $("e_x").textContent="≈ "+(ins.e/Math.max(1,ins.t)).toFixed(0)+"×";
+    $("s_narr").innerHTML="Let it ride and the work compounds into an estimated <b>"+money(m.deferred)+"</b>, forced around <b>year "+m.forced
+      +"</b> — about <b>"+mult.toFixed(1)+"×</b> the cost with us. A regular plan is <b>"+money(m.market)+"</b> at market; the gold line is a maintenance cost <b>reduced by our inspections</b> — every area you let us watch below pushes it lower, because catching things early keeps future maintenance down.";
+  }
+
+  function tileHTML(c,t){
+    var on=(bud[t.id]!=null), r=tRange(t), val=on?bud[t.id]:r.M;
+    function preset(k,label){ var v=k==="off"?null:r[k]; var pressed=(k==="off"?!on:(on&&Math.abs(bud[t.id]-v)<1));
+      return '<button class="'+(k==="off"?"off":"")+'" data-id="'+t.id+'" data-k="'+k+'" aria-pressed="'+pressed+'">'+label+'</button>'; }
+    var slider = on ? ('<div class="tslide"><input type="range" class="rng-in tbud" data-id="'+t.id+'" min="'+r.min+'" max="'+r.max+'" step="250" value="'+val+'"><span class="budval" id="bv_'+t.id+'">'+money(val)+'</span></div>') : '';
+    return '<div class="tile'+(on?' sel':'')+'" id="tile_'+t.id+'"><p class="tt">'+t.t+'</p><p class="td">'+t.d+'</p>'
+      +'<p class="tm">~'+found(t)+' '+t.iu+'</p><div class="lvl">'+preset("off","Off")+preset("S","Small")+preset("M","Medium")+preset("L","Large")+'</div>'+slider+'</div>';
+  }
+  function catMeta(c){ var tiles=c.tiles.filter(function(t){return tileApplicable(c,t);}), b=0,n=0;
+    tiles.forEach(function(t){ if(bud[t.id]!=null){ b+=bud[t.id]; n++; } });
+    return n?('<b>'+money(b)+'</b> · '+n+'/'+tiles.length+' picked'):(tiles.length+' area'+(tiles.length>1?'s':'')); }
+
+  function renderInspect(){
+    refreshNeeds();
+    if(!inited){ DEFAULTS.forEach(function(id){ var t=TILE[id]; if(t) bud[id]=tRange(t).M; }); inited=true; }
+    var host=$("catlist"), html=[];
+    CATS.forEach(function(c,ci){
+      if(!catApplicable(c)) return;
+      var tiles=c.tiles.filter(function(t){return tileApplicable(c,t);});
+      if(!tiles.length) return;
+      var rc=c.risk==="high"?'<span class="rc high">High risk</span>':c.risk==="mod"?'<span class="rc mod">Moderate</span>':'<span class="rc none">We check it</span>';
+      html.push('<div class="cat'+(open[ci]?' open':'')+'" data-ci="'+ci+'"><button class="cat-head" data-ci="'+ci+'"><span class="chev">›</span>'+rc
+        +'<span class="nm">'+c.name+'</span><span class="meta" id="meta_'+ci+'">'+catMeta(c)+'</span></button><div class="cat-body"><div class="tiles">');
+      tiles.forEach(function(t){ html.push(tileHTML(c,t)); });
+      html.push('</div></div></div>');
+    });
+    host.innerHTML=html.join("");
+  }
+  function updateMetas(){ CATS.forEach(function(c,ci){ if(catApplicable(c)){ var el=$("meta_"+ci); if(el) el.innerHTML=catMeta(c); } }); }
+
+  function renderPlan(){
+    refreshNeeds();
+    var rows=[], total=0, count=0;
+    CATS.forEach(function(c){
+      if(!catApplicable(c)) return;
+      var tiles=c.tiles.filter(function(t){return tileApplicable(c,t)&&bud[t.id]!=null;});
+      if(!tiles.length) return;
+      rows.push('<tr class="cathdr"><td colspan="3">'+c.name+'</td></tr>');
+      tiles.forEach(function(t){ var amt=bud[t.id], r=tRange(t); total+=amt; count++;
+        rows.push('<tr><td class="area">'+t.t+'<div class="sub">~'+found(t)+' '+t.iu+'</div></td>'
+          +'<td><div class="pslide"><input type="range" class="rng-in pbud" data-id="'+t.id+'" min="'+r.min+'" max="'+r.max+'" step="250" value="'+amt+'"></div></td>'
+          +'<td class="r" id="pv_'+t.id+'">'+money(amt)+'</td></tr>');
+      });
+    });
+    var body=$("planBody");
+    if(!count){ body.innerHTML='<div class="plan-empty">Set a budget on the areas in “What we check &amp; fix” above, and your plan builds here.</div>'; }
+    else body.innerHTML='<table class="plan-t"><thead><tr><th>Area of concern</th><th>Fine-tune</th><th class="r">This plan</th></tr></thead><tbody>'
+      +rows.join("")+'</tbody><tfoot><tr><td>Total maintenance plan</td><td></td><td class="r">'+money(total)+'</td></tr></tfoot></table>';
+    var market=total*MARKET_MULT;
+    $("p_count").textContent=count; $("p_count_s").textContent=count?"of the areas your building has":"set a budget on areas above";
+    $("p_total").textContent=money(total); $("p_total_s").textContent="over "+years+" year"+(years>1?"s":"");
+    $("p_market").textContent=money(market); $("p_market_s").textContent=count?("you save "+money(market-total)+" with us"):"—";
+    renderAmort(total); renderBudget(total); renderCart(total);
+    return total;
+  }
+
+  function renderAmort(total){
+    $("a_years").textContent=years+" year"+(years>1?"s":"");
+    var per=years>0?total/years:total; $("a_peryear").textContent=money(per);
+    var host=$("yearbars"), h=[], max=per||1;
+    for(var y=1;y<=years;y++){ var amt=per; h.push('<div class="yb"><div class="amt">'+money(amt)+'</div><div class="bar" style="height:'+Math.max(6,(amt/max)*76)+'px"></div><div class="yr">Yr '+y+'</div></div>'); }
+    host.innerHTML=h.join("");
+  }
+
+  function renderBudget(total){
+    $("o_res").textContent=resMult.toFixed(1)+"× the plan";
+    var aip=total, reserve=Math.round(total*resMult), emerg=Math.round(total*0.20), tender=Math.round(total*0.62), committed=emerg+tender;
+    var maxv=Math.max(reserve,aip,committed,1);
+    var rows=[
+      {cls:"res",nm:"Reserve you set aside",cl:"Class F · order-of-magnitude",v:reserve},
+      {cls:"aip",nm:"Approval in principle",cl:"Class D · current-state average = your plan",v:aip},
+      {cls:"comm",nm:"Committed — emergencies + tendered",cl:"Class A · "+money(emerg)+" now + "+money(tender)+" tendered",v:committed}
+    ];
+    $("ladder").innerHTML=rows.map(function(r){ return '<div class="lrow"><div class="ll"><div class="nm">'+r.nm+'</div><div class="cl">'+r.cl+'</div></div>'
+      +'<div class="lbar-wrap"><div class="lbar '+r.cls+'" style="width:'+Math.max(2,(r.v/maxv)*100)+'%"></div><span class="lval">'+money(r.v)+'</span></div></div>'; }).join("");
+    var ratio=committed>0?reserve/committed:resMult; var hh=$("health");
+    if(!total){ hh.className="health ok"; hh.innerHTML="Pick some work above and we'll show how your reserve compares to what you'd actually commit."; }
+    else if(ratio>=1.5){ hh.className="health ok"; hh.innerHTML="<b>Healthy reserve.</b> At "+resMult.toFixed(1)+"× the plan, your reserve is "+ratio.toFixed(1)+"× what you'd commit to contracts ("+money(committed)+") — room left for a fire, a roof leak, a real surprise, and unspent money rolls over."; }
+    else { hh.className="health warn"; hh.innerHTML="<b>That's not really a reserve.</b> At "+resMult.toFixed(1)+"× the plan it's only "+ratio.toFixed(1)+"× your committed contracts ("+money(committed)+") — too close. Push the slider up: a reserve needs headroom for the emergencies a plan can't schedule."; }
+  }
+
+  function renderCart(total){
+    var ins=inspection(), m=base(), cov=coverage();
+    var yellowYr=Math.round(m.tenera*(1-COVER_MAX*cov)/S.hz), mktYr=Math.round(m.market/S.hz);
+    $("c_insp").textContent=money(ins.t); $("c_insp_e").textContent=money(ins.e);
+    $("c_plan").textContent=money(total);
+    $("c_maint").textContent=money(yellowYr)+"/yr"; $("c_maint_m").textContent=money(mktYr); $("c_maint_s").textContent="save "+money(mktYr-yellowYr)+"/yr";
+  }
+
+  function renderAll(){ renderScope(); renderInspect(); renderPlan(); }
+
+  /* wiring */
+  function bindRange(id,k){ $(id).addEventListener("input",function(){ S[k]=+this.value; renderAll(); }); }
+  ["sp_floors|floors","sp_upf|upf","sp_age|age","sp_surf|surf","sp_uglev|uglev","sp_ugsp|ugsp","sp_elev|elev","sp_hz|hz"].forEach(function(p){var a=p.split("|");bindRange(a[0],a[1]);});
+  function bindSwitch(id,k){ $(id).addEventListener("click",function(){ S[k]=this.getAttribute("aria-checked")!=="true"; this.setAttribute("aria-checked",String(S[k])); renderAll(); }); }
+  bindSwitch("sw_balc","balc"); bindSwitch("sw_heat","heat"); bindSwitch("sw_ug","ug");
+  function bindSeg(id,k){ var b=$(id); b.querySelectorAll("button").forEach(function(btn){ btn.addEventListener("click",function(){ S[k]=btn.getAttribute("data-v"); b.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",String(x===btn));}); renderAll(); }); }); }
+  bindSeg("seg_pool","pool"); bindSeg("seg_elev","elevType"); bindSeg("seg_baltype","balType");
+
+  $("sp_years").addEventListener("input",function(){ years=+this.value; renderPlan(); });
+  $("sp_res").addEventListener("input",function(){ resMult=+this.value; renderBudget(planTotal()); });
+
+  // inspect: preset buttons (rebuild) + tile sliders (no rebuild)
+  $("catlist").addEventListener("click",function(e){
+    var head=e.target.closest(".cat-head");
+    if(head){ var ci=+head.getAttribute("data-ci"); open[ci]=!open[ci]; head.parentNode.classList.toggle("open",open[ci]); return; }
+    var pb=e.target.closest(".lvl button");
+    if(pb){ var id=pb.getAttribute("data-id"), k=pb.getAttribute("data-k"), t=TILE[id];
+      if(k==="off") delete bud[id]; else bud[id]=tRange(t)[k];
+      renderScope(); renderInspect(); renderPlan(); }
+  });
+  $("catlist").addEventListener("input",function(e){
+    var sl=e.target.closest(".tbud"); if(!sl) return;
+    var id=sl.getAttribute("data-id"); bud[id]=+sl.value;
+    var bv=$("bv_"+id); if(bv) bv.textContent=money(bud[id]);
+    updateMetas(); renderScope(); renderPlan(); // plan/chart update without rebuilding catlist
+  });
+  // plan: line sliders (no rebuild of plan table while dragging)
+  $("planBody").addEventListener("input",function(e){
+    var sl=e.target.closest(".pbud"); if(!sl) return;
+    var id=sl.getAttribute("data-id"); bud[id]=+sl.value;
+    var pv=$("pv_"+id); if(pv) pv.textContent=money(bud[id]);
+    var tb=document.querySelector('.tbud[data-id="'+id+'"]'); if(tb){ tb.value=bud[id]; var bv=$("bv_"+id); if(bv) bv.textContent=money(bud[id]); }
+    updateMetas();
+    var total=planTotal(); $("p_total").textContent=money(total); $("p_market").textContent=money(total*MARKET_MULT);
+    $("p_market_s").textContent="you save "+money(total*MARKET_MULT-total)+" with us";
+    var tf=document.querySelector('.plan-t tfoot .r'); if(tf) tf.textContent=money(total);
+    renderAmort(total); renderBudget(total); renderScope(); renderCart(total);
+  });
+  $("expAll").addEventListener("click",function(){ CATS.forEach(function(c,i){open[i]=true;}); renderInspect(); });
+  $("colAll").addEventListener("click",function(){ open={}; renderInspect(); });
+
+  function cartVis(){ var sc=$("scope").getBoundingClientRect(), bg=$("budget").getBoundingClientRect(), vh=window.innerHeight;
+    var show=(sc.top<vh*0.7)&&(bg.bottom>vh*0.35); $("cart").classList.toggle("show",show); document.body.classList.toggle("cart-on",show); }
+  window.addEventListener("scroll",cartVis,{passive:true});
+  window.addEventListener("resize",function(){ renderScope(); cartVis(); });
+  refreshNeeds(); DEFAULTS.forEach(function(id){ var t=TILE[id]; if(t) bud[id]=tRange(t).M; }); inited=true;
+  renderAll(); cartVis();
+})();
+</script>
+</html>

@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tenera — Rental Building Inspections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --tnr-gray:#33383C;
+    --tnr-green:#145A3D;
+    --tnr-accent:#4CC38A;
+    --navy:#152344;
+    --navy-deep:#0F1B36;
+    --orange:#F15A24;
+    --ink:#1B2B4B;
+    --muted:#98A2B3;
+    --line:#E7EBF0;
+    --bg:#F3F7F4;
+    --green:#2FBF71;
+    --green-bg:#EAF7EF;
+    --yellow:#E8A33D;
+    --yellow-bg:#FBF2E2;
+    --red:#B3261E;
+    --red-bg:#FEF1EE;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- banner ---------- */
+  .topbar{
+    background:var(--tnr-gray);border-bottom:3px solid var(--tnr-green);
+    padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+    flex-wrap:wrap;position:sticky;top:0;z-index:20;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .mark{width:40px;height:40px;border-radius:9px;background:var(--tnr-green);
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;letter-spacing:.04em}
+  .brand h1{margin:0;color:#fff;font-size:17px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+  .brand .deck{margin-left:6px;padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.09);
+    color:#C9D1D4;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+  .navlinks{display:flex;gap:22px;flex-wrap:wrap}
+  .navlinks a{color:#C9D1D4;text-decoration:none;font-size:11px;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;transition:color .15s}
+  .navlinks a:hover{color:var(--tnr-accent)}
+
+  /* ---------- section shell ---------- */
+  .sec{padding:66px 28px;max-width:1180px;margin:0 auto}
+  .eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    font-weight:600;color:var(--orange);margin:0 0 14px}
+  .act-num{color:var(--tnr-accent);font-weight:700;margin-right:8px}
+  h2.big{font-size:34px;font-weight:700;letter-spacing:-.01em;line-height:1.15;margin:0 0 16px;max-width:820px}
+  .lede{font-size:18px;line-height:1.6;color:#41506B;max-width:740px;margin:0}
+  .rule{height:3px;width:64px;background:var(--orange);border-radius:2px;margin:0 0 26px}
+  .subhead{font-size:24px;font-weight:600;margin:0 0 10px}
+
+  /* ---------- hero ---------- */
+  .hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff;
+    padding:82px 28px 78px}
+  .hero-inner{max-width:1180px;margin:0 auto}
+  .hero .eyebrow{color:var(--tnr-accent)}
+  .hero h2{font-size:46px;font-weight:700;line-height:1.08;letter-spacing:-.02em;margin:0 0 20px;max-width:860px}
+  .hero p{font-size:19px;line-height:1.6;color:#C7D2E5;max-width:700px;margin:0 0 34px}
+  .hero .promise{background:rgba(76,195,138,.12);border-left:4px solid var(--tnr-accent);
+    border-radius:10px;padding:20px 24px;max-width:740px;font-size:18px;line-height:1.55}
+  .hero .promise b{color:var(--tnr-accent)}
+  .herometa{display:flex;gap:40px;flex-wrap:wrap;margin-top:38px}
+  .herometa .m .k{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8FA0BF;margin-bottom:5px}
+  .herometa .m .v{font-size:24px;font-weight:700}
+  .herometa .m .v.acc{color:var(--tnr-accent)}
+
+  /* ---------- reactive vs planned strip ---------- */
+  .flip{display:grid;grid-template-columns:1fr auto 1fr;gap:26px;align-items:stretch;margin-top:36px}
+  .flip .box{border-radius:var(--radius);padding:26px 26px;border:1px solid var(--line);background:#fff}
+  .flip .box.bad{background:var(--red-bg);border-color:#F6D6CF}
+  .flip .box.good{background:var(--green-bg);border-color:#CBEBD8}
+  .flip .box .t{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;margin:0 0 12px}
+  .flip .box.bad .t{color:var(--red)}
+  .flip .box.good .t{color:var(--tnr-green)}
+  .flip .box p{margin:0;font-size:16px;line-height:1.55;color:#3A4A63}
+  .flip .arrow{display:grid;place-items:center;font-size:30px;color:var(--orange);font-weight:700}
+  @media(max-width:820px){.flip{grid-template-columns:1fr}.flip .arrow{transform:rotate(90deg)}}
+
+  /* ---------- RentSafeTO anchor ---------- */
+  .rsto{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .rsto-inner{max-width:1180px;margin:0 auto;padding:66px 28px}
+  .citytag{display:inline-flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+    font-weight:600;color:var(--tnr-gray);background:#EEF2F6;border-radius:99px;padding:7px 14px;margin-bottom:18px}
+  .citytag i{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+
+  .signs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0 8px}
+  .sign{border-radius:var(--radius);padding:22px 22px;color:#fff}
+  .sign.g{background:var(--green)} .sign.y{background:var(--yellow)} .sign.r{background:var(--red)}
+  .sign .band{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;opacity:.9}
+  .sign .rng{font-size:30px;font-weight:700;margin:6px 0 6px;line-height:1}
+  .sign .desc{font-size:13.5px;line-height:1.5;opacity:.96}
+  .sign .share{display:block;margin-top:12px;font-size:12px;font-weight:600;opacity:.92}
+  @media(max-width:720px){.signs{grid-template-columns:1fr}}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px}
+  .split .col{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:26px 26px}
+  .split .col h3{margin:0 0 4px;font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:600}
+  .split .col.city h3{color:var(--navy)}
+  .split .col.mgr h3{color:var(--orange)}
+  .split .col .sub{font-size:13px;color:var(--muted);margin:0 0 18px}
+  .split ul{margin:0;padding:0;list-style:none}
+  .split li{position:relative;padding:0 0 15px 26px;font-size:14.5px;line-height:1.5;color:#3A4A63}
+  .split li:last-child{padding-bottom:0}
+  .split li::before{content:"";position:absolute;left:0;top:7px;width:11px;height:11px;border-radius:3px}
+  .split .col.city li::before{background:var(--navy)}
+  .split .col.mgr li::before{background:var(--orange)}
+  .split li b{color:var(--ink);font-weight:600}
+  @media(max-width:820px){.split{grid-template-columns:1fr}}
+
+  /* scoring mechanics band */
+  .mech{background:var(--navy);color:#fff;border-radius:var(--radius);padding:34px 34px;margin-top:36px}
+  .mech .lab{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--tnr-accent);margin:0 0 14px}
+  .formula{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:16px;font-weight:600;margin-bottom:22px}
+  .formula .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:12px 16px}
+  .formula .chip.pos{border-color:rgba(76,195,138,.5)} .formula .chip.neg{border-color:rgba(241,90,36,.5)}
+  .formula .op{color:#8FA0BF;font-size:20px}
+  .formula .chip.res{background:var(--tnr-green);border-color:var(--tnr-green)}
+  .mechgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .mechgrid .mi .n{font-size:26px;font-weight:700;color:#fff;line-height:1}
+  .mechgrid .mi .d{font-size:13px;color:#B9C2C7;margin-top:7px;line-height:1.5}
+  .mechgrid .mi .n small{font-size:14px;color:var(--tnr-accent);font-weight:600}
+  @media(max-width:720px){.mechgrid{grid-template-columns:1fr}}
+
+  /* category map table */
+  .mapwrap{overflow-x:auto;margin-top:34px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}
+  table.map{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+  table.map th{text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:16px 18px;border-bottom:1px solid var(--line);background:#FAFBFC}
+  table.map td{padding:14px 18px;border-bottom:1px solid #F1F4F7;vertical-align:top;line-height:1.45}
+  table.map tr:last-child td{border-bottom:none}
+  table.map td.cat{font-weight:600;color:var(--ink);width:34%}
+  table.map td.svc{color:var(--tnr-green);font-weight:600;width:34%}
+  table.map td.risk{width:32%}
+  .rc{display:inline-block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+    padding:3px 9px;border-radius:99px}
+  .rc.high{background:var(--red-bg);color:var(--red)}
+  .rc.mod{background:var(--yellow-bg);color:#8A5A16}
+  .rc.cos{background:#EEF2F6;color:var(--muted)}
+  .mapnote{font-size:13px;color:var(--muted);margin:16px 0 0;line-height:1.55}
+
+  /* capital plan callout */
+  .cap{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;margin-top:36px;
+    background:var(--green-bg);border:1px solid #CBEBD8;border-radius:var(--radius);padding:28px 30px}
+  .cap .badge{width:76px;height:76px;border-radius:16px;background:var(--tnr-green);color:#fff;display:grid;
+    place-items:center;font-size:12px;font-weight:700;text-align:center;letter-spacing:.06em;line-height:1.2;padding:8px}
+  .cap h3{margin:0 0 8px;font-size:19px;font-weight:600;color:var(--tnr-green)}
+  .cap p{margin:0;font-size:15px;line-height:1.6;color:#26493A}
+  .cap p b{color:var(--tnr-green)}
+  @media(max-width:600px){.cap{grid-template-columns:1fr}}
+
+  /* escalation strip */
+  .esc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+  .esc .e{background:#fff;border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:12px;padding:22px 22px}
+  .esc .e .h{font-size:14px;font-weight:600;margin:0 0 6px}
+  .esc .e p{margin:0;font-size:13px;line-height:1.5;color:#5B6B85}
+  @media(max-width:820px){.esc{grid-template-columns:1fr}}
+
+  /* honest myth-buster */
+  .myth{background:var(--navy-deep);color:#fff;border-radius:var(--radius);padding:32px 34px;margin-top:36px}
+  .myth .lab{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--tnr-accent);margin:0 0 16px}
+  .myth-rows{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .myth-rows .mr .t{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin:0 0 8px}
+  .myth-rows .no .t{color:#FF8A5C} .myth-rows .yes .t{color:var(--tnr-accent)}
+  .myth-rows p{margin:0;font-size:14.5px;line-height:1.55;color:#C7D2E5}
+  @media(max-width:720px){.myth-rows{grid-template-columns:1fr}}
+
+  /* ---------- how it works ---------- */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;position:relative}
+  .step .n{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;
+    font-weight:700;font-size:15px;margin-bottom:16px}
+  .step.you .n{background:var(--orange)}
+  .step h3{margin:0 0 8px;font-size:16px;font-weight:600}
+  .step p{margin:0;font-size:13.5px;line-height:1.5;color:#5B6B85}
+  .step .tag{display:inline-block;margin-top:12px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+    font-weight:600;padding:3px 9px;border-radius:99px;background:#EEF2F6;color:var(--muted)}
+  .step.you .tag{background:#FFE6DB;color:var(--orange)}
+  @media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.steps{grid-template-columns:1fr}}
+
+  /* ---------- service gallery ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+  .cardsvc{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px;
+    box-shadow:0 1px 2px rgba(21,35,68,.04);transition:.16s}
+  .cardsvc:hover{border-color:var(--tnr-accent);box-shadow:0 6px 22px rgba(20,90,61,.10);transform:translateY(-2px)}
+  .cardsvc .ztop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 8px}
+  .cardsvc .z{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--tnr-green)}
+  .cardsvc h3{margin:0 0 8px;font-size:17px;font-weight:600;line-height:1.25}
+  .cardsvc p{margin:0;font-size:13.5px;line-height:1.5;color:#5B6B85}
+  .scored{font-size:9px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;padding:3px 7px;border-radius:99px;
+    background:var(--red-bg);color:var(--red);white-space:nowrap}
+  .scored.mod{background:var(--yellow-bg);color:#8A5A16}
+  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.grid{grid-template-columns:1fr}}
+
+  .zone{margin-top:40px}
+  .zone:first-of-type{margin-top:26px}
+  .zone-label{display:flex;align-items:center;gap:12px;margin-bottom:2px;flex-wrap:wrap}
+  .zone-label i{width:10px;height:10px;border-radius:3px;background:var(--tnr-green)}
+  .zone-label h4{margin:0;font-size:13px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;color:var(--tnr-gray)}
+  .zone-label span{font-size:13px;color:var(--muted)}
+
+  /* ---------- great deal ---------- */
+  .deal{background:var(--tnr-gray);color:#fff;padding:66px 28px}
+  .deal-inner{max-width:1180px;margin:0 auto}
+  .deal .eyebrow{color:var(--tnr-accent)}
+  .deal h2.big{color:#fff}
+  .deal .lede{color:#C9D1D4}
+  .deal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .deal-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:var(--radius);padding:26px 24px}
+  .deal-card .ic{font-size:22px;margin-bottom:14px}
+  .deal-card h3{margin:0 0 9px;font-size:17px;font-weight:600;color:#fff}
+  .deal-card p{margin:0;font-size:14px;line-height:1.55;color:#B9C2C7}
+  .deal-card.hi{background:var(--tnr-green);border-color:var(--tnr-green)}
+  .deal-card.hi p{color:#D6ECE1}
+  @media(max-width:900px){.deal-grid{grid-template-columns:1fr}}
+
+  /* ---------- reassurance ---------- */
+  .reassure{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:30px}
+  .rcard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 24px;display:flex;gap:16px}
+  .rcard .chk{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--green-bg);color:var(--tnr-green);
+    display:grid;place-items:center;font-weight:700;font-size:16px}
+  .rcard h3{margin:0 0 6px;font-size:16px;font-weight:600}
+  .rcard p{margin:0;font-size:14px;line-height:1.55;color:#5B6B85}
+  @media(max-width:720px){.reassure{grid-template-columns:1fr}}
+
+  .quote{margin-top:30px;background:var(--navy);color:#fff;border-radius:var(--radius);padding:34px 36px}
+  .quote p{margin:0 0 14px;font-size:22px;line-height:1.5;font-weight:500}
+  .quote .who{font-size:13px;color:#93A4C4;letter-spacing:.04em}
+  .quote .q{color:var(--orange);font-size:40px;font-weight:700;line-height:0;position:relative;top:14px}
+
+  /* ---------- close ---------- */
+  .close{background:linear-gradient(160deg,var(--tnr-green) 0%,#0E3F2B 100%);color:#fff;padding:70px 28px;text-align:center}
+  .close h2{font-size:34px;font-weight:700;margin:0 0 16px}
+  .close p{font-size:18px;color:#CDE6DA;max-width:600px;margin:0 auto 30px;line-height:1.6}
+  .btn{display:inline-block;background:var(--orange);color:#fff;text-decoration:none;font-weight:600;
+    font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:16px 34px;border-radius:10px;transition:.15s}
+  .btn:hover{background:#D94A18}
+  footer{background:var(--navy-deep);color:#7E8CA8;text-align:center;padding:26px;font-size:12px;line-height:1.6}
+  footer a{color:#9FB0CC}
+
+  .placeholder{display:inline-block;background:#FFE6DB;color:var(--orange);font-size:11px;font-weight:600;
+    padding:2px 8px;border-radius:6px;letter-spacing:.03em;vertical-align:2px}
+
+  /* ---------- scope calculator ---------- */
+  .is-hidden{display:none!important}
+  .scope-wrap{display:grid;grid-template-columns:380px minmax(0,1fr);gap:22px;margin-top:34px;align-items:start}
+  @media(max-width:960px){.scope-wrap{grid-template-columns:1fr}}
+  .spanel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 24px;
+    box-shadow:0 1px 2px rgba(21,35,68,.04)}
+  .spanel .ptitle{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--tnr-gray);margin:0 0 4px}
+  .spanel .psub{font-size:12.5px;color:var(--muted);margin:0 0 18px}
+  .sfield{margin-bottom:17px}
+  .sfield-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:12px}
+  .sfield-h label{font-size:13.5px;font-weight:600}
+  .sfield-h output{font-size:14px;font-weight:700;color:var(--orange);font-variant-numeric:tabular-nums}
+  .scope input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+    background:#E6EAEF;outline:none;margin:0;cursor:pointer}
+  .scope input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+    background:var(--orange);border:none;cursor:grab;box-shadow:0 1px 3px rgba(241,90,36,.45)}
+  .scope input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--orange);border:none;cursor:grab}
+  .stoggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+  .stoggle .lb{font-size:13.5px;font-weight:600}
+  .swi{position:relative;width:52px;height:28px;border-radius:99px;background:var(--tnr-green);border:none;cursor:pointer;flex:0 0 auto;transition:background .16s;padding:0}
+  .swi[aria-checked=false]{background:#CBD3DC}
+  .swi::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .16s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .swi[aria-checked=true]::after{transform:translateX(24px)}
+  .sseg{display:grid;grid-auto-flow:column;gap:8px;margin-top:8px}
+  .sseg button{padding:11px 6px;border-radius:8px;border:1px solid #DDE3EA;background:#fff;font:inherit;font-size:11px;
+    font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:.14s}
+  .sseg button[aria-pressed=true]{background:var(--orange);border-color:var(--orange);color:#fff}
+  .sublock{margin:6px 0 0 0;padding:14px 16px;background:var(--bg);border-radius:10px}
+  .sublock.is-off{display:none}
+
+  .sright{display:flex;flex-direction:column;gap:18px;min-width:0}
+  .bsum{background:var(--navy);color:#fff;border-radius:var(--radius);padding:16px 20px;font-size:14px;font-weight:500;line-height:1.5}
+  .bsum b{color:var(--tnr-accent);font-weight:700}
+  .scard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:0 1px 2px rgba(21,35,68,.04)}
+  .scard h3{margin:0 0 4px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--tnr-gray)}
+  #scopeChartHost{position:relative}
+  #scopeChart{display:block;width:100%;height:auto}
+  .stip{position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;background:var(--navy);color:#fff;border-radius:8px;
+    padding:8px 11px;font-size:12px;line-height:1.4;white-space:nowrap;transform:translate(-50%,-124%);z-index:5}
+  .slegend{display:flex;gap:22px;font-size:12.5px;color:#5B6B85;margin-top:12px;flex-wrap:wrap}
+  .slegend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+  .skpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:620px){.skpis{grid-template-columns:1fr}}
+  .skpi{border-radius:var(--radius);padding:20px 20px;border:1px solid var(--line);background:#fff}
+  .skpi .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  .skpi .v{font-size:27px;font-weight:700;line-height:1.02;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .skpi .s{font-size:12px;margin-top:7px;line-height:1.4}
+  .skpi.good{background:var(--green-bg);border-color:#CBEBD8} .skpi.good .k{color:var(--tnr-green)} .skpi.good .s{color:#3C6B54}
+  .skpi.bad{background:var(--red-bg);border-color:#F6D6CF} .skpi.bad .k{color:var(--red)} .skpi.bad .s{color:#7A4038}
+  .skpi.hot{background:var(--tnr-gray)} .skpi.hot .k{color:var(--tnr-accent)} .skpi.hot .v{color:#fff} .skpi.hot .s{color:#B9C2C7}
+  .snarr{background:var(--yellow-bg);border-left:4px solid var(--yellow);border-radius:10px;padding:18px 22px;
+    font-size:15.5px;line-height:1.6;color:#5a3f14;margin:0}
+  .snarr b{font-weight:700;color:#3d2a0a}
+  .assump{font-size:11.5px;color:var(--muted);line-height:1.5;margin:4px 0 0}
+</style>
+
+<!-- ======================= BANNER ======================= -->
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">TNR</div>
+    <h1>Tenera</h1>
+    <span class="deck">Inspections</span>
+  </div>
+  <nav class="navlinks">
+    <a href="#usecase">Use case</a>
+    <a href="#rsto">The score</a>
+    <a href="#scope">Your numbers</a>
+    <a href="#services">Services</a>
+    <a href="#deal">The deal</a>
+    <a href="#reassure">Why us</a>
+  </nav>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Rental &amp; high-rise building inspections</span>
+    <h2>The building always tells you what it needs. Now the City is grading how well you listen.</h2>
+    <p>Tenera inspects every part of your building on a schedule, writes down what it finds, and hands you a clear, specified plan — before small problems become expensive ones, and before an inspector puts a coloured sign on your front door.</p>
+    <div class="promise">
+      We turn what would have been <b>an emergency six months from now</b> into <b>planned work that saves money and stress</b>.
+    </div>
+    <div class="herometa">
+      <div class="m"><span class="k">One inspection</span><span class="v">One flat, stated price</span></div>
+      <div class="m"><span class="k">Your contractor</span><span class="v acc">You tender &amp; choose</span></div>
+      <div class="m"><span class="k">RentSafeTO</span><span class="v">Score-ready plan</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ACT 1 · USE CASE ======================= -->
+<section class="sec" id="usecase">
+  <span class="eyebrow"><span class="act-num">01</span>The use case</span>
+  <h2 class="big">Most managers are reactive — not because they don't care, but because no one is watching the whole building.</h2>
+  <div class="rule"></div>
+  <p class="lede">You know your building has needs you can't see. A crack that's cheap today saws through the concrete tomorrow. We watch it all for you — so nothing turns into a surprise, a work order, or a downgraded score on a sign every tenant walks past.</p>
+
+  <div class="flip">
+    <div class="box bad">
+      <p class="t">Reactive — what it costs</p>
+      <p>A hairline crack in the asphalt gets ignored. Water gets under it, freezes, and cuts straight through to the concrete slab. What was <b>$5 a foot</b> to seal is now <b>$50 a foot</b> to rebuild.</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box good">
+      <p class="t">Planned — what we do</p>
+      <p>We catch it on the scheduled inspection, put it on your plan with a stated price, and it gets sealed on your timeline — not on the day the slab fails or the day the inspector arrives.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RENTSAFETO ANCHOR ======================= -->
+<section class="rsto" id="rsto">
+  <div class="rsto-inner">
+    <span class="citytag"><i></i>City of Toronto · RentSafeTO · in effect since June 15, 2026</span>
+    <h2 class="big">The City now inspects your building on a schedule — and posts the result on your door.</h2>
+    <div class="rule"></div>
+    <p class="lede">RentSafeTO covers roughly 3,600 purpose-built rental buildings (three or more storeys, ten or more units). Every one is evaluated on a two-year cycle against 50 scored categories, and since June 15 every one must display a green, yellow, or red sign at its main entrance.</p>
+
+    <div class="signs">
+      <div class="sign g">
+        <div class="band">Green · 85–100%</div>
+        <div class="rng">Satisfactory</div>
+        <div class="desc">Meets most or all City maintenance standards, few or no violations.</div>
+        <span class="share">≈ 75% of buildings</span>
+      </div>
+      <div class="sign y">
+        <div class="band">Yellow · 70–84%</div>
+        <div class="rng">Needs improvement</div>
+        <div class="desc">Meets some standards; may have some violations.</div>
+        <span class="share">≈ 21% of buildings</span>
+      </div>
+      <div class="sign r">
+        <div class="band">Red · 0–69%</div>
+        <div class="rng">Needs significant improvement</div>
+        <div class="desc">Meets few standards; may have several violations.</div>
+        <span class="share">≈ 3% of buildings</span>
+      </div>
+    </div>
+
+    <!-- city vs manager -->
+    <div class="split">
+      <div class="col city">
+        <h3>How the City runs the inspection</h3>
+        <p class="sub">Municipal Code Ch. 354 &amp; 629 · bylaw enforcement officer</p>
+        <ul>
+          <li>Every building is evaluated <b>once every two years</b>; you're notified in advance and the visit is scheduled so you or a designate can unlock common areas and amenities.</li>
+          <li>The officer walks <b>the interior and the exterior</b>, records notes and photographs, and checks the building against the property standards.</li>
+          <li>Any <b>health or life-safety issue</b> gets an Order to Comply or Notice of Violation issued on the spot.</li>
+          <li>The score is calculated, delivered through the online portal, and the <b>colour is refreshed daily</b> as orders are issued or cleared.</li>
+        </ul>
+      </div>
+      <div class="col mgr">
+        <h3>What you're now on the hook for</h3>
+        <p class="sub">Owner &amp; operator obligations</p>
+        <ul>
+          <li><b>Post the coloured sign</b> at the main entrance, and replace it within <b>14 days</b> of any colour change.</li>
+          <li><b>Disclose the rating</b> to every prospective tenant before and after signing — and to existing tenants once a year.</li>
+          <li>Post the <b>full evaluation result</b> on the Tenant Notification Board and provide the rating to anyone who asks.</li>
+          <li>Maintain a mandatory, scored <b>State of Good Repair (Capital) Plan</b> — a five-year forecast of major repairs.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- scoring mechanics -->
+    <div class="mech">
+      <p class="lab">How the score is actually built</p>
+      <div class="formula">
+        <span class="chip pos">Proactive score</span>
+        <span class="op">−</span>
+        <span class="chip neg">Reactive deductions</span>
+        <span class="op">=</span>
+        <span class="chip res">Total building score</span>
+      </div>
+      <div class="mechgrid">
+        <div class="mi"><div class="n">50 <small>categories</small></div><div class="d">Each scored 1–3 and weighted by risk: 17 high-risk categories carry <b>51%</b> of the total — and most of them are envelope, balcony and structure.</div></div>
+        <div class="mi"><div class="n">−1% / −2%</div><div class="d">Every Order or Notice knocks off 1% for 30 days; an Emergency Order, 2% for four months. They revert when you fix the issue.</div></div>
+        <div class="mi"><div class="n">Daily <small>refresh</small></div><div class="d">Scores are percentile-ranked against other buildings and updated daily — so your colour can slip between evaluations purely from open orders.</div></div>
+      </div>
+    </div>
+
+    <!-- category map -->
+    <h3 class="subhead" style="margin-top:52px">The score sheet is a façade, balcony and concrete exam</h3>
+    <p class="lede" style="font-size:15px">The highest-weighted categories the officer scores are, almost line for line, the work we do. This is the City's own list — matched to our services.</p>
+    <div class="mapwrap">
+      <table class="map">
+        <thead><tr><th>RentSafeTO category</th><th>City risk weighting</th><th>What we do about it</th></tr></thead>
+        <tbody>
+          <tr><td class="cat">Building Exterior<br><span style="font-weight:400;color:var(--muted);font-size:12.5px">spalling brick, delamination, exposed rebar, water staining, missing flashing, deteriorated balcony slab</span></td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Masonry repointing, concrete restoration, flashing &amp; caulking</td></tr>
+          <tr><td class="cat">Balcony Guards</td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Balcony restoration, guard &amp; railing repair, deck coating</td></tr>
+          <tr><td class="cat">Retaining Walls</td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Retaining wall realignment &amp; crack repair</td></tr>
+          <tr><td class="cat">Windows</td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Perimeter caulking &amp; weathertight sealing</td></tr>
+          <tr><td class="cat">Catch Basins &amp; Storm Drainage</td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Drain &amp; catch-basin servicing, ponding fixes</td></tr>
+          <tr><td class="cat">Exterior Walkways</td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Stairs, handrails &amp; surface repair, trip-hazard removal</td></tr>
+          <tr><td class="cat">Exterior Doors</td><td class="risk"><span class="rc high">High risk</span></td><td class="svc">Door, frame &amp; hardware inspection and repair</td></tr>
+          <tr><td class="cat">Parking Areas</td><td class="risk"><span class="rc mod">Moderate risk</span></td><td class="svc">Garage concrete, column bases, traffic coatings, water penetration</td></tr>
+          <tr><td class="cat">Exterior Grounds</td><td class="risk"><span class="rc mod">Moderate risk</span></td><td class="svc">Grading, drainage &amp; landscaping</td></tr>
+          <tr><td class="cat">Fencing</td><td class="risk"><span class="rc cos">Cosmetic</span></td><td class="svc">Fence repair &amp; replacement</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mapnote">Risk weightings and categories per City of Toronto's Apartment Building Evaluation criteria as summarized in the RentSafeTO research brief (Aug 2026). The open dataset even publishes per-category sub-scores — <em>EXTERIOR_CLADDING, WATER_PEN_EXT_BLDG_ELEMENTS, BALCONY_GUARDS, PARKING_AREA</em> — so a weak envelope shows up in public data even when the headline score looks fine.</p>
+
+    <!-- capital plan hook -->
+    <div class="cap">
+      <div class="badge">5-YEAR CAPITAL PLAN</div>
+      <div>
+        <h3>The plan the City requires is the plan we produce.</h3>
+        <p>Every owner must keep a <b>State of Good Repair (Capital) Plan</b> — a five-year forecast covering roof, façade, windows, balcony guards, the underground garage, mechanical systems and more, on the City's template, handed to any tenant within 60 days of request. That five-year plan of prioritized, specified, costed work is exactly the output of a Tenera inspection. <b>We hand you a compliance document and a repair roadmap in one.</b></p>
+      </div>
+    </div>
+
+    <!-- escalation -->
+    <h3 class="subhead" style="margin-top:52px">What a low score sets in motion</h3>
+    <div class="esc">
+      <div class="e"><div class="h">Audit</div><p>Buildings in the lowest 2.5% are prioritized for a full audit — every common area, the garage, the grounds, plus a door-to-door tenant canvass. 30 days' notice, posted on the board. Fees apply.</p></div>
+      <div class="e"><div class="h">Targeted engagement</div><p>If the score drops 5%+ for two months running, or the sign stays red for two months, the City sets up an information booth on your property and talks to your tenants directly.</p></div>
+      <div class="e"><div class="h">Orders &amp; re-inspection</div><p>Orders arrive by registered mail and get posted on the board; the officer re-inspects about five days after the deadline. Appeals are possible but slow the actual fix.</p></div>
+    </div>
+
+    <!-- honest myth-buster -->
+    <div class="myth">
+      <p class="lab">Straight talk — what the colour does and doesn't do</p>
+      <div class="myth-rows">
+        <div class="mr no">
+          <div class="t">It does NOT</div>
+          <p>A yellow or red rating does <b>not</b> ban you from leasing units or raising rent. The colour is a maintenance signal, not a closure. Rent increases stay a provincial matter under the Residential Tenancies Act — the City has no say.</p>
+        </div>
+        <div class="mr yes">
+          <div class="t">It DOES</div>
+          <p>It puts a public sign on your door, forces disclosure to every prospective tenant, and escalates City attention. And an <b>open order</b> on a unit — or a vital-service or pest issue — <b>can</b> stop you renting <b>that unit</b> until it's cleared. We keep you clear of both.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SCOPE / COST-OF-WAITING CALCULATOR ======================= -->
+<section class="sec scope" id="scope">
+  <span class="eyebrow">Your building, your numbers</span>
+  <h2 class="big">What does waiting actually cost <em>you</em>?</h2>
+  <div class="rule"></div>
+  <p class="lede">Slide in the shape of your building. We'll estimate the restoration capital it carries — and the gap between maintaining it on a plan and being forced to fix it all at once. Everything below the calculator reshapes to your building too.</p>
+
+  <div class="scope-wrap">
+    <!-- INPUT PANEL -->
+    <aside class="spanel">
+      <p class="ptitle">Describe your building</p>
+      <p class="psub">Rough is fine — this is a scale, not a quote.</p>
+
+      <div class="sfield">
+        <div class="sfield-h"><label for="sp_floors">Floors</label><output id="o_floors">12</output></div>
+        <input type="range" id="sp_floors" min="3" max="40" step="1" value="12">
+      </div>
+      <div class="sfield">
+        <div class="sfield-h"><label for="sp_upf">Apartments per floor</label><output id="o_upf">8</output></div>
+        <input type="range" id="sp_upf" min="2" max="20" step="1" value="8">
+      </div>
+      <div class="sfield">
+        <div class="sfield-h"><label for="sp_age">Building age</label><output id="o_age">30 yrs</output></div>
+        <input type="range" id="sp_age" min="0" max="70" step="1" value="30">
+      </div>
+
+      <div class="stoggle">
+        <span class="lb">Balconies</span>
+        <button class="swi" id="sw_balc" role="switch" aria-checked="true" aria-label="Balconies"></button>
+      </div>
+      <div class="stoggle">
+        <span class="lb">Heated ramp</span>
+        <button class="swi" id="sw_heat" role="switch" aria-checked="true" aria-label="Heated ramp"></button>
+      </div>
+
+      <div class="sfield" style="margin-top:16px">
+        <div class="sfield-h"><label>Pool</label></div>
+        <div class="sseg" id="seg_pool">
+          <button data-v="none" aria-pressed="true">None</button>
+          <button data-v="indoor" aria-pressed="false">Indoor</button>
+          <button data-v="outdoor" aria-pressed="false">Outdoor</button>
+        </div>
+      </div>
+
+      <div class="sfield">
+        <div class="sfield-h"><label for="sp_surf">Surface parking spaces</label><output id="o_surf">40</output></div>
+        <input type="range" id="sp_surf" min="0" max="200" step="5" value="40">
+      </div>
+
+      <div class="stoggle">
+        <span class="lb">Underground parking</span>
+        <button class="swi" id="sw_ug" role="switch" aria-checked="true" aria-label="Underground parking"></button>
+      </div>
+      <div class="sublock" id="ugBlock">
+        <div class="sfield">
+          <div class="sfield-h"><label for="sp_uglev">Underground levels</label><output id="o_uglev">1</output></div>
+          <input type="range" id="sp_uglev" min="1" max="5" step="1" value="1">
+        </div>
+        <div class="sfield" style="margin-bottom:0">
+          <div class="sfield-h"><label for="sp_ugsp">Underground spaces</label><output id="o_ugsp">80</output></div>
+          <input type="range" id="sp_ugsp" min="0" max="300" step="10" value="80">
+        </div>
+      </div>
+
+      <div class="sfield" style="margin-top:16px">
+        <div class="sfield-h"><label for="sp_elev">Elevator shafts</label><output id="o_elev">2</output></div>
+        <input type="range" id="sp_elev" min="1" max="10" step="1" value="2">
+      </div>
+      <div class="sfield">
+        <div class="sfield-h"><label>Elevator type</label></div>
+        <div class="sseg" id="seg_elev">
+          <button data-v="cable" aria-pressed="true">Cable (traction)</button>
+          <button data-v="piston" aria-pressed="false">Piston (hydraulic)</button>
+        </div>
+      </div>
+
+      <div class="sfield" style="margin-top:16px;margin-bottom:0">
+        <div class="sfield-h"><label for="sp_hz">Planning window</label><output id="o_hz">15 yrs</output></div>
+        <input type="range" id="sp_hz" min="10" max="25" step="1" value="15">
+      </div>
+    </aside>
+
+    <!-- OUTPUT -->
+    <div class="sright">
+      <div class="bsum" id="bsum">—</div>
+
+      <div class="scard">
+        <h3>Cumulative restoration spend — plan it vs. let it ride</h3>
+        <div id="scopeChartHost">
+          <svg id="scopeChart" viewBox="0 0 1000 380" role="img" aria-label="Cumulative restoration spend"></svg>
+          <div class="stip" id="stip"></div>
+        </div>
+        <div class="slegend">
+          <span><i style="background:var(--tnr-green)"></i>Maintained — planned &amp; amortized</span>
+          <span><i style="background:var(--red)"></i>Deferred — forced &amp; all at once</span>
+        </div>
+      </div>
+
+      <div class="skpis">
+        <div class="skpi good"><div class="k">Maintain on plan</div><div class="v" id="k_plan">—</div><div class="s" id="k_plan_s">—</div></div>
+        <div class="skpi bad"><div class="k">Let it ride</div><div class="v" id="k_def">—</div><div class="s" id="k_def_s">—</div></div>
+        <div class="skpi hot"><div class="k">You pay extra</div><div class="v" id="k_prem">—</div><div class="s" id="k_prem_s">—</div></div>
+      </div>
+
+      <p class="snarr" id="s_narr">—</p>
+      <p class="assump">Illustrative estimate using GTA restoration benchmarks for Tenera-scope work (envelope, balconies, garage, waterproofing, roof, site) — not mechanical, electrical, or interior capital. Figures scale with the inputs above; Tenera calibrates to your actual building on inspection. Not a quote.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= HOW IT WORKS + SERVICES ======================= -->
+<section class="sec" id="services">
+  <h2 class="big" style="font-size:26px">How it works — and where you stay in control</h2>
+  <div class="rule"></div>
+  <div class="steps">
+    <div class="step">
+      <div class="n">1</div>
+      <h3>We survey</h3>
+      <p>Our engineers inspect every zone of the building — the same interior and exterior the City officer will — and document the condition.</p>
+      <span class="tag">Tenera</span>
+    </div>
+    <div class="step">
+      <div class="n">2</div>
+      <h3>We spec &amp; scope</h3>
+      <p>You get a full written specification for every item, and your five-year Capital Plan — exactly what needs doing and why.</p>
+      <span class="tag">Tenera</span>
+    </div>
+    <div class="step you">
+      <div class="n">3</div>
+      <h3>You tender &amp; choose</h3>
+      <p>You take our specs to tender and pick the construction company. That decision is yours.</p>
+      <span class="tag">You</span>
+    </div>
+    <div class="step">
+      <div class="n">4</div>
+      <h3>We track it</h3>
+      <p>Everything — urgent now and reserve-fund down the road — lives in one platform. Full visibility and control.</p>
+      <span class="tag">Tenera</span>
+    </div>
+  </div>
+
+  <!-- service gallery -->
+  <h2 class="big" style="font-size:26px;margin-top:64px">What we inspect &amp; fix — top to bottom</h2>
+  <div class="rule"></div>
+  <p class="lede" style="font-size:15px">Pick what matters to your building. A red flag marks a scored RentSafeTO category — small money now, on the City's own exam sheet.</p>
+
+  <!-- ZONE: Roof & envelope -->
+  <div class="zone">
+    <div class="zone-label"><i></i><h4>Roof &amp; building envelope</h4><span>the shell that keeps water out</span></div>
+    <div class="grid">
+      <div class="cardsvc"><div class="ztop"><span class="z">Roof</span></div><h3>Roof &amp; roof drains</h3><p>Membrane, flashing, drains and safety covers inspected before the leak shows up on someone's ceiling.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Envelope</span><span class="scored">Scored · High</span></div><h3>Caulking &amp; flashing</h3><p>Exterior sealants and flashing — the cheapest waterproofing you'll ever buy, and a Building Exterior scoring item.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Masonry</span><span class="scored">Scored · High</span></div><h3>Brick &amp; mortar repointing</h3><p>Restore failing mortar with polymer cement before the wall lets water in. Spalling and delamination cost you points.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Masonry</span></div><h3>Brick coating &amp; protection</h3><p>The right breathable masonry paint protects the brick <em>and</em> makes the building look cared-for — the wrong paint destroys it.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Openings</span><span class="scored">Scored · High</span></div><h3>Windows &amp; perimeter seals</h3><p>Around-window sealants and weathertightness — deteriorated caulking and leaks are a High-risk category.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Openings</span><span class="scored">Scored · High</span></div><h3>Doors — interior &amp; exterior</h3><p>Every door checked for seal, operation and security. Exterior doors are individually scored.</p></div>
+    </div>
+  </div>
+
+  <!-- ZONE: Balconies -->
+  <div class="zone" data-need="balcony">
+    <div class="zone-label"><i></i><h4>Balconies &amp; terraces</h4><span>the most-watched surfaces in the building</span></div>
+    <div class="grid">
+      <div class="cardsvc"><div class="ztop"><span class="z">Balcony</span><span class="scored">Scored · High</span></div><h3>Balcony guards &amp; edges</h3><p>Rusted or low guards, openings over 4 inches, sealing the leading edges — a High-risk category and a life-safety flag.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Balcony</span><span class="scored">Scored · High</span></div><h3>Deck coating &amp; slabs</h3><p>A proper deck coating seals the top so water can't delaminate the slab. Deteriorated slabs score against you.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Balcony</span></div><h3>Cold joints &amp; underside</h3><p>The cold joint where the balcony meets the unit is a classic ingress point — fixed from the top, where the water is.</p></div>
+    </div>
+  </div>
+
+  <!-- ZONE: Parking garage & below grade -->
+  <div class="zone" data-need="parking">
+    <div class="zone-label"><i></i><h4>Parking garage &amp; below grade</h4><span>where neglect gets most expensive</span></div>
+    <div class="grid">
+      <div class="cardsvc" data-need="underground"><div class="ztop"><span class="z">Structure</span><span class="scored mod">Scored · Mod</span></div><h3>Column bases</h3><p>A coat at the base of each column stops it getting eaten away — so you never lose the column holding the building up.</p></div>
+      <div class="cardsvc" data-need="underground"><div class="ztop"><span class="z">Concrete</span><span class="scored mod">Scored · Mod</span></div><h3>Concrete restoration</h3><p>Patch repairs through to complete jobs on walls, ceilings and pillars — Parking Areas is a scored category.</p></div>
+      <div class="cardsvc" data-need="underground"><div class="ztop"><span class="z">Concrete</span></div><h3>Expansion &amp; control joints</h3><p>The item everyone forgets and everyone regrets. Sealed joints keep water out of the structure.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Drainage</span><span class="scored">Scored · High</span></div><h3>Catch basins &amp; drains</h3><p>Storm drains, roof drains, sloping and safety covers — obstruction and ponding are a High-risk scoring item.</p></div>
+      <div class="cardsvc" data-need="underground"><div class="ztop"><span class="z">Coatings</span><span class="scored mod">Scored · Mod</span></div><h3>Traffic &amp; Puma coatings</h3><p>Traffic-deck and Puma coatings on turn radiuses to protect the slab from salt and snow, and stop water penetration.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Structure</span><span class="scored">Scored · High</span></div><h3>Retaining walls</h3><p>Entrance walls crack and shift as soil pushes. Cracks, lean and exposed rebar are a High-risk category.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Envelope</span></div><h3>Cable trays &amp; penetrations</h3><p>Trays and wall penetrations that trickle water into the brick — sealed so they stop quietly destroying the wall.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Vertical</span></div><h3>Elevator pits &amp; shaft waterproofing</h3><p id="elevCardText">Waterproofing the shaft and pit is far cheaper done now than after water sits at the base of the columns.</p></div>
+    </div>
+  </div>
+
+  <!-- ZONE: Mechanical & service rooms -->
+  <div class="zone">
+    <div class="zone-label"><i></i><h4>Mechanical &amp; service rooms</h4><span>the rooms nobody shows the inspector</span></div>
+    <div class="grid">
+      <div class="cardsvc"><div class="ztop"><span class="z">Mechanical</span></div><h3>Boiler, chiller &amp; utility rooms</h3><p>Condition, sealing and drainage of every mechanical and utility room documented in one place.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Rental</span></div><h3>Laundry rooms</h3><p>Rental-specific and always a problem: condensation and drainage caught before they damage the room.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Waste</span></div><h3>Compactor rooms</h3><p>Floors and walls sealed properly — not painted over moisture, which just peels and hides the damage.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Water</span></div><h3>Sump pits &amp; pumps</h3><p>Service the pit and set up dual pumps so a clog never means a flood. Replace a small unit, not a big one.</p></div>
+    </div>
+  </div>
+
+  <!-- ZONE: Site, access & common areas -->
+  <div class="zone">
+    <div class="zone-label"><i></i><h4>Site, access &amp; common areas</h4><span>the first and last thing anyone sees</span></div>
+    <div class="grid">
+      <div class="cardsvc" data-need="surface"><div class="ztop"><span class="z">Asphalt</span></div><h3>Asphalt crack sealing</h3><p>Seal the crack for $5 a foot now, or rebuild the concrete beneath it for $50 a foot later. Easy math.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Access</span><span class="scored">Scored · High</span></div><h3>Walkways, ramps &amp; safety paint</h3><p>Wheelchair and senior ramps, handrails and surfaces — Exterior Walkways covers trip hazards and drainage.</p></div>
+      <div class="cardsvc" data-need="heatedramp"><div class="ztop"><span class="z">Access</span></div><h3>Heated ramps</h3><p>Maintenance and repair of heated ramp systems so they actually work when the first storm hits.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Site</span><span class="scored mod">Scored · Mod</span></div><h3>Grading &amp; landscaping</h3><p>Sloping, grading and drainage — Exterior Grounds scores water ponding and unmaintained foliage.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Common</span></div><h3>Stairs &amp; railings</h3><p>Wobbly railings and worn stairs are expensive — we have a cheaper way to fix both.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Common</span></div><h3>Lobbies &amp; amenity areas</h3><p>Floors, sealants, pool and party rooms, patios and terraces — the spaces residents judge you on.</p></div>
+      <div class="cardsvc" data-need="pool"><div class="ztop"><span class="z">Amenity</span></div><h3>Pool &amp; wet amenities</h3><p>Pool decks, surrounding structure and the humidity-driven damage around indoor pools — inspected, sealed and coated.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Exterior</span></div><h3>Graffiti removal &amp; sealer</h3><p>Clear the city work order, then seal so the next tag washes straight off.</p></div>
+      <div class="cardsvc"><div class="ztop"><span class="z">Units</span></div><h3>In-unit repairs</h3><p>Individual repairs inside units when you need them — same organized process, same stated pricing.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ACT 2 · GREAT DEAL ======================= -->
+<section class="deal" id="deal">
+  <div class="deal-inner">
+    <span class="eyebrow"><span class="act-num">02</span>The deal</span>
+    <h2 class="big">You get a large firm's engineers, software and pricing power — for one building's problem.</h2>
+    <div class="rule"></div>
+    <p class="lede">A single building can't justify its own engineer. As one of a hundred clients, you get all of it — at prices that are set before the work starts.</p>
+
+    <div class="deal-grid">
+      <div class="deal-card hi">
+        <div class="ic">◎</div>
+        <h3>Capped, flat, predictable fees</h3>
+        <p>Pricing is stated ahead of time and standardized. An inspection costs X — you know the number before we start, every time.</p>
+      </div>
+      <div class="deal-card">
+        <div class="ic">▤</div>
+        <h3>Volume pricing</h3>
+        <p>You're one building. We buy and tender as one of a hundred clients — so your work often costs less through us than doing it yourself.</p>
+      </div>
+      <div class="deal-card">
+        <div class="ic">✎</div>
+        <h3>Engineers on tap</h3>
+        <p>Access to our engineers for work too small to hire your own — and you're welcome to bring your own engineer in alongside ours.</p>
+      </div>
+      <div class="deal-card hi">
+        <div class="ic">▧</div>
+        <h3>Your Capital Plan, done</h3>
+        <p>The mandatory five-year State of Good Repair plan comes out of the inspection — compliance document and repair roadmap in one.</p>
+      </div>
+      <div class="deal-card">
+        <div class="ic">▦</div>
+        <h3>One platform</h3>
+        <p>Every finding, spec and quote in one place — the software does the organizing that no one on your team has time for.</p>
+      </div>
+      <div class="deal-card">
+        <div class="ic">↻</div>
+        <h3>Now <em>and</em> the reserve fund</h3>
+        <p>We track what's required right now and the multi-year reserve-fund items down the road — visibility and control over both.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ACT 3 · RE-ASSURANCE ======================= -->
+<section class="sec" id="reassure">
+  <span class="eyebrow"><span class="act-num">03</span>Re-assurance</span>
+  <h2 class="big">The questions you'd have about working with us — answered before you ask.</h2>
+  <div class="rule"></div>
+  <p class="lede">The whole reason to send this to a colleague: they get the answers to everything they'd worry about, without having to bring it up.</p>
+
+  <div class="reassure">
+    <div class="rcard"><div class="chk">✓</div><div><h3>You pick the contractor — not us</h3><p>We survey, spec and scope. You take it to tender and choose the construction company. We don't lock you into anyone.</p></div></div>
+    <div class="rcard"><div class="chk">✓</div><div><h3>We do the organizing</h3><p>You don't like organizing this, and you shouldn't have to. Being organized for you is the whole product.</p></div></div>
+    <div class="rcard"><div class="chk">✓</div><div><h3>We inspect to the City's own categories</h3><p>Our survey mirrors the 50 RentSafeTO scoring categories and produces your mandatory State of Good Repair Capital Plan.</p></div></div>
+    <div class="rcard"><div class="chk">✓</div><div><h3>We give you straight talk, not fear</h3><p>The colour doesn't ban leasing or rent increases — and we'll always tell you what actually moves your score versus what doesn't.</p></div></div>
+    <div class="rcard"><div class="chk">✓</div><div><h3>We handle the volume</h3><p>We work at far bigger volume than a single building — we're set up to look at tenders and coordinate trades.</p></div></div>
+    <div class="rcard"><div class="chk">✓</div><div><h3>We've been doing this a long time</h3><p>Across hundreds of buildings, we've seen — and fixed — nearly everything a building can throw at you.</p></div></div>
+  </div>
+
+  <div class="quote">
+    <span class="q">"</span>
+    <p>Client testimonial goes here — a short, specific line from a manager about what was so good about working with Tenera. <span class="placeholder">Boris to supply real quote + name</span></p>
+    <div class="who">— Property manager, [Building / Company]</div>
+  </div>
+</section>
+
+<!-- ======================= CLOSE ======================= -->
+<section class="close">
+  <h2>Let's build your building's plan.</h2>
+  <p>Tell us what matters to you, and we'll send back this presentation with every section you picked — plus a score-ready, City-compliant plan and the answers to the questions your colleagues haven't asked yet.</p>
+  <a class="btn" href="#">Book an inspection</a>
+</section>
+
+<footer>
+  Tenera — Rental &amp; High-Rise Building Inspections · Draft for review<br>
+  RentSafeTO figures summarized from the City of Toronto research brief (current as at Aug 6, 2026); confirm current requirements at toronto.ca before relying on them commercially.
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+
+  /* ---- illustrative GTA restoration benchmarks (CAD), Tenera scope ---- */
+  var C={
+    balcony:{f:12000,p:0.40}, garageSpace:{f:9000,p:0.45}, garageLevel:{f:60000,p:0.50},
+    envelopeUnit:{f:8000,p:0.40}, roofPSF:{f:22,p:0.60}, asphaltSpace:{f:1500,p:0.40},
+    heatedRamp:{f:50000,p:0.50}, elevShaft:{f:18000,p:0.50},
+    poolIndoor:{f:120000,p:0.50}, poolOutdoor:{f:70000,p:0.50},
+    siteUnit:{f:600,p:0.40}, mechUnit:{f:500,p:0.45}
+  };
+  var RUSH=1.20;
+  function ageR(a){return Math.min(2.2,Math.max(0.6,0.6+a/40));}
+  function ageP(a){return Math.min(1.6,Math.max(0.8,0.8+a/90));}
+
+  var S={floors:12,upf:8,age:30,balc:true,heat:true,pool:"none",surf:40,
+         ug:true,uglev:1,ugsp:80,elev:2,elevType:"cable",hz:15};
+
+  function compute(){
+    var units=S.floors*S.upf, foot=S.upf*850, balc=S.balc?units:0;
+    var items=[];
+    function add(qty,def,prev,cond){ if(qty>0) items.push({f:qty*def,p:prev,cond:cond!==false}); }
+    add(balc,C.balcony.f,C.balcony.p,true);
+    add(S.ug?S.ugsp:0,C.garageSpace.f,C.garageSpace.p,true);
+    add(S.ug?S.uglev:0,C.garageLevel.f,C.garageLevel.p,true);
+    add(units,C.envelopeUnit.f,C.envelopeUnit.p,true);
+    add(foot,C.roofPSF.f,C.roofPSF.p,true);
+    add(S.surf,C.asphaltSpace.f,C.asphaltSpace.p,true);
+    add(S.heat?1:0,C.heatedRamp.f,C.heatedRamp.p,true);
+    add(S.elev,C.elevShaft.f*(S.elevType==="piston"?1.4:1.0),C.elevShaft.p,true);
+    add(S.pool==="indoor"?1:0,C.poolIndoor.f,C.poolIndoor.p,true);
+    add(S.pool==="outdoor"?1:0,C.poolOutdoor.f,C.poolOutdoor.p,true);
+    add(units,C.siteUnit.f,C.siteUnit.p,false);
+    add(units,C.mechUnit.f,C.mechUnit.p,false);
+    var arF=ageR(S.age), apF=ageP(S.age), deferred=0, planned=0;
+    items.forEach(function(it){ var af=it.cond?arF:1, apf=it.cond?apF:1;
+      deferred+=it.f*af*RUSH; planned+=it.f*it.p*apf; });
+    var forced=Math.round(S.hz-(S.age/70)*(S.hz-2)); forced=Math.max(2,Math.min(S.hz-1,forced));
+    return {units:units, deferred:Math.round(deferred), planned:Math.round(planned), forced:forced};
+  }
+
+  function money(v){var a=Math.abs(v),s=v<0?"-$":"$";
+    if(a>=1e6)return s+(a/1e6).toFixed(2)+"M";
+    if(a>=1e3)return s+Math.round(a/1e3)+"k"; return s+Math.round(a);}
+
+  /* ---- chart: cumulative spend, planned (linear) vs deferred (flat then step) ---- */
+  var geo=null;
+  function drawChart(r){
+    var svg=$("scopeChart"),W=1000,H=380,PAD={t:26,r:20,b:40,l:78};
+    var N=S.hz, plan=r.planned, def=r.deferred, forced=r.forced;
+    var trickle=def*0.015; // small emergency patching before the wall
+    // planned: steady amortized climb.  deferred: flat trickle, then a forced jump, then flat.
+    var planS=[],defS=[],m;
+    for(m=0;m<=N;m++){
+      planS.push(plan*m/N);
+      defS.push(m<forced ? trickle*m : trickle*forced+def);
+    }
+    var hi=Math.max(plan,trickle*forced+def)*1.08, lo=0;
+    var pw=W-PAD.l-PAD.r, ph=H-PAD.t-PAD.b;
+    var X=function(m){return PAD.l+(N>0?m/N:0)*pw;};
+    var Y=function(v){return PAD.t+(1-(v-lo)/(hi-lo))*ph;};
+    geo={X:X,Y:Y,plan:planS,def:defS};
+    var s=[],g,m;
+    for(g=0;g<=4;g++){var val=lo+(hi-lo)*g/4,y=Y(val);
+      s.push('<line x1="'+PAD.l+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD.r)+'" y2="'+y.toFixed(1)+'" stroke="#EEF1F5"/>');
+      s.push('<text x="'+(PAD.l-12)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="12" fill="#9AA6B8" font-family="Poppins,sans-serif">'+money(val)+'</text>');}
+    for(m=0;m<=N;m+=Math.ceil(N/6)){
+      s.push('<text x="'+X(m).toFixed(1)+'" y="'+(H-PAD.b+22)+'" text-anchor="middle" font-size="12" fill="#9AA6B8" font-family="Poppins,sans-serif">'+(m===0?'now':'yr '+m)+'</text>');}
+    // deferred area + line
+    function poly(arr){return arr.map(function(v,i){return X(i).toFixed(1)+","+Y(v).toFixed(1);}).join(" ");}
+    s.push('<polyline points="'+poly(defS)+'" fill="none" stroke="var(--red)" stroke-width="3" stroke-linejoin="round"/>');
+    s.push('<polyline points="'+poly(planS)+'" fill="none" stroke="var(--tnr-green)" stroke-width="3" stroke-linejoin="round"/>');
+    // forced marker
+    var fx=X(forced);
+    s.push('<line x1="'+fx.toFixed(1)+'" y1="'+PAD.t+'" x2="'+fx.toFixed(1)+'" y2="'+(H-PAD.b)+'" stroke="var(--red)" stroke-width="1.2" stroke-dasharray="5 5"/>');
+    var lbl='Forced · yr '+forced, w=lbl.length*6.6+18;
+    s.push('<rect x="'+(fx-w/2).toFixed(1)+'" y="'+(PAD.t-22)+'" width="'+w.toFixed(1)+'" height="22" rx="6" fill="var(--red)"/>');
+    s.push('<text x="'+fx.toFixed(1)+'" y="'+(PAD.t-6)+'" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" font-family="Poppins,sans-serif">'+lbl+'</text>');
+    // end dots
+    s.push('<circle cx="'+X(N).toFixed(1)+'" cy="'+Y(planS[N]).toFixed(1)+'" r="4.5" fill="var(--tnr-green)"/>');
+    s.push('<circle cx="'+X(N).toFixed(1)+'" cy="'+Y(defS[N]).toFixed(1)+'" r="4.5" fill="var(--red)"/>');
+    svg.innerHTML=s.join("");
+  }
+
+  function render(){
+    var r=compute();
+    // outputs
+    $("o_floors").textContent=S.floors;
+    $("o_upf").textContent=S.upf;
+    $("o_age").textContent=S.age+" yrs";
+    $("o_surf").textContent=S.surf;
+    $("o_uglev").textContent=S.uglev;
+    $("o_ugsp").textContent=S.ugsp;
+    $("o_elev").textContent=S.elev;
+    $("o_hz").textContent=S.hz+" yrs";
+    $("ugBlock").className="sublock"+(S.ug?"":" is-off");
+
+    var planYr=r.planned/S.hz, prem=r.deferred-r.planned, mult=(r.deferred/r.planned);
+    $("bsum").innerHTML="<b>"+r.units+" units</b> · "+S.floors+" floors · "+S.upf+"/floor · "+S.age+" yrs old · "
+      +S.elev+" "+(S.elevType==="piston"?"piston":"cable")+" elevator"+(S.elev>1?"s":"")
+      +(S.balc?" · balconies":"")+(S.ug?" · "+S.uglev+"-level underground ("+S.ugsp+" spaces)":"")
+      +(S.surf>0?" · "+S.surf+" surface spaces":"")+(S.pool!=="none"?" · "+S.pool+" pool":"")+(S.heat?" · heated ramp":"");
+
+    $("k_plan").textContent=money(r.planned);
+    $("k_plan_s").textContent="≈ "+money(planYr)+"/yr over "+S.hz+" yrs";
+    $("k_def").textContent=money(r.deferred);
+    $("k_def_s").textContent="forced ~yr "+r.forced+", little to no amortization";
+    $("k_prem").textContent="+"+money(prem);
+    $("k_prem_s").textContent=mult.toFixed(1)+"× more — and all at once";
+
+    $("s_narr").innerHTML="Kept on a plan, this building's restoration runs about <b>"+money(r.planned)+"</b> — roughly <b>"
+      +money(planYr)+" a year</b> you can budget and amortize. Let it ride and the same work compounds into an estimated <b>"
+      +money(r.deferred)+"</b>, landing around <b>year "+r.forced+"</b> when something fails or the City forces it — <b>"
+      +mult.toFixed(1)+"× the cost</b>, on the worst possible timeline. The gap, <b>"+money(prem)+"</b>, is what watching the building buys back.";
+
+    // elevator card text swap
+    var ec=$("elevCardText");
+    if(ec){ ec.textContent = S.elevType==="piston"
+      ? "Piston (hydraulic) elevators sit in a deep pit with a cylinder in the ground — water pools there. Waterproofing the pit now is far cheaper than a corroded cylinder later."
+      : "Waterproofing the shaft and pit is far cheaper done now than after water sits at the base of the columns."; }
+
+    // show/hide gallery to match the building
+    var needs={balcony:S.balc, parking:(S.ug||S.surf>0), underground:S.ug, surface:S.surf>0, heatedramp:S.heat, pool:S.pool!=="none"};
+    document.querySelectorAll("[data-need]").forEach(function(el){
+      el.classList.toggle("is-hidden", !needs[el.getAttribute("data-need")]);
+    });
+    document.querySelectorAll("#services .zone").forEach(function(z){
+      if(z.hasAttribute("data-need")) return; // zone-level need already handled
+      var cards=z.querySelectorAll(".cardsvc");
+      var any=Array.prototype.some.call(cards,function(c){return !c.classList.contains("is-hidden");});
+      z.classList.toggle("is-hidden", cards.length>0 && !any);
+    });
+
+    drawChart(r);
+  }
+
+  /* ---- wiring ---- */
+  function bindRange(id,key){ $(id).addEventListener("input",function(){ S[key]=+this.value; render(); }); }
+  bindRange("sp_floors","floors"); bindRange("sp_upf","upf"); bindRange("sp_age","age");
+  bindRange("sp_surf","surf"); bindRange("sp_uglev","uglev"); bindRange("sp_ugsp","ugsp");
+  bindRange("sp_elev","elev"); bindRange("sp_hz","hz");
+
+  function bindSwitch(id,key){ $(id).addEventListener("click",function(){
+    S[key]=this.getAttribute("aria-checked")!=="true"; this.setAttribute("aria-checked",String(S[key])); render(); }); }
+  bindSwitch("sw_balc","balc"); bindSwitch("sw_heat","heat"); bindSwitch("sw_ug","ug");
+
+  function bindSeg(id,key){ var box=$(id);
+    box.querySelectorAll("button").forEach(function(b){ b.addEventListener("click",function(){
+      S[key]=b.getAttribute("data-v");
+      box.querySelectorAll("button").forEach(function(x){ x.setAttribute("aria-pressed",String(x===b)); });
+      render(); }); }); }
+  bindSeg("seg_pool","pool"); bindSeg("seg_elev","elevType");
+
+  window.addEventListener("resize",function(){ $("stip").style.opacity=0; render(); });
+  render();
+})();
+</script>
+</html>
